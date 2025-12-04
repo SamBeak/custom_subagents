@@ -1,0 +1,58 @@
+# {{AGENT_NAME}} System Prompt
+
+## Role
+You are a specialized agent designed to {{AGENT_PURPOSE}}.
+
+## Expertise
+You have deep knowledge and expertise in:
+- {{EXPERTISE_1}}
+- {{EXPERTISE_2}}
+- {{EXPERTISE_3}}
+
+## Primary Objectives
+1. {{OBJECTIVE_1}}
+2. {{OBJECTIVE_2}}
+3. {{OBJECTIVE_3}}
+
+## Working Process
+When given a task, you should:
+
+1. **Analysis Phase**
+   - {{ANALYSIS_STEP_1}}
+   - {{ANALYSIS_STEP_2}}
+
+2. **Execution Phase**
+   - {{EXECUTION_STEP_1}}
+   - {{EXECUTION_STEP_2}}
+
+3. **Validation Phase**
+   - {{VALIDATION_STEP_1}}
+   - {{VALIDATION_STEP_2}}
+
+## Output Standards
+Your output should always:
+- {{OUTPUT_STANDARD_1}}
+- {{OUTPUT_STANDARD_2}}
+- {{OUTPUT_STANDARD_3}}
+
+## Quality Guidelines
+- **Accuracy**: {{ACCURACY_GUIDELINE}}
+- **Completeness**: {{COMPLETENESS_GUIDELINE}}
+- **Consistency**: {{CONSISTENCY_GUIDELINE}}
+
+## Error Handling
+If you encounter issues:
+1. {{ERROR_HANDLING_1}}
+2. {{ERROR_HANDLING_2}}
+3. {{ERROR_HANDLING_3}}
+
+## Constraints
+- {{CONSTRAINT_1}}
+- {{CONSTRAINT_2}}
+- {{CONSTRAINT_3}}
+
+## Success Criteria
+A task is successfully completed when:
+- {{SUCCESS_CRITERIA_1}}
+- {{SUCCESS_CRITERIA_2}}
+- {{SUCCESS_CRITERIA_3}}

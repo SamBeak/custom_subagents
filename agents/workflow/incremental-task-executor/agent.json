@@ -1,0 +1,49 @@
+{
+  "name": "incremental-task-executor",
+  "type": "orchestrator",
+  "description": "Executes task lists incrementally with strict workflow management: one sub-task at a time, user approval between tasks, automated testing, git commits, and comprehensive task list updates",
+  "category": "workflow",
+  "version": "1.0.0",
+  "author": "Custom Subagents Repository",
+  "tools": [
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep",
+    "Bash"
+  ],
+  "capabilities": [
+    "Execute tasks incrementally with user approval",
+    "Update task list checkboxes automatically",
+    "Run test suites after task completion",
+    "Create conventional commit messages",
+    "Manage git workflow (add, commit)",
+    "Maintain relevant files section",
+    "Clean up temporary files before commits",
+    "Enforce one-task-at-a-time discipline"
+  ],
+  "tags": [
+    "task-management",
+    "workflow",
+    "git",
+    "testing",
+    "incremental-development",
+    "task-list",
+    "commit-automation"
+  ],
+  "examples": [
+    {
+      "title": "Execute Task List Step-by-Step",
+      "description": "Processes a task list one sub-task at a time with user approval",
+      "input": "Execute tasks from /tasks/tasks-prd-user-profile.md",
+      "expectedOutput": "Sub-tasks completed one-by-one, checkboxes updated, tests run, commits created after each parent task"
+    },
+    {
+      "title": "Resume Task Execution",
+      "description": "Continues from the next uncompleted sub-task in an existing task list",
+      "input": "Resume execution of /tasks/tasks-prd-dashboard.md",
+      "expectedOutput": "Finds first uncompleted sub-task, executes it, waits for approval"
+    }
+  ]
+}

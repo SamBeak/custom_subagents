@@ -1,0 +1,44 @@
+{
+  "name": "prd-task-generator",
+  "type": "generator",
+  "description": "Analyzes Product Requirements Documents (PRD) and generates detailed, step-by-step task lists in Markdown format for developers to implement features",
+  "category": "documentation",
+  "version": "1.0.0",
+  "author": "Custom Subagents Repository",
+  "tools": [
+    "Read",
+    "Write",
+    "Glob",
+    "Grep"
+  ],
+  "capabilities": [
+    "Analyze PRD functional requirements and user stories",
+    "Assess current codebase state and identify existing components",
+    "Generate hierarchical task lists (parent tasks and sub-tasks)",
+    "Identify relevant files that need creation or modification",
+    "Create structured Markdown task documentation",
+    "Interactive task generation with user confirmation"
+  ],
+  "tags": [
+    "prd",
+    "task-generation",
+    "project-planning",
+    "documentation",
+    "development-workflow",
+    "markdown"
+  ],
+  "examples": [
+    {
+      "title": "Generate Task List from User Profile PRD",
+      "description": "Analyzes a PRD for user profile editing feature and generates implementation task list",
+      "input": "Generate tasks from prd-user-profile-editing.md",
+      "expectedOutput": "Structured task list with parent tasks, sub-tasks, and relevant files in tasks-prd-user-profile-editing.md"
+    },
+    {
+      "title": "Interactive Task Generation",
+      "description": "Generates high-level tasks first, waits for user confirmation, then generates detailed sub-tasks",
+      "input": "Create implementation plan from prd-dashboard.md",
+      "expectedOutput": "Parent tasks presented first, then detailed sub-tasks after 'Go' confirmation"
+    }
+  ]
+}

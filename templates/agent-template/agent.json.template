@@ -1,0 +1,34 @@
+{
+  "name": "{{AGENT_NAME}}",
+  "type": "{{AGENT_TYPE}}",
+  "description": "{{AGENT_DESCRIPTION}}",
+  "category": "{{CATEGORY}}",
+  "version": "1.0.0",
+  "author": "{{AUTHOR}}",
+  "tools": [
+    "Read",
+    "Write",
+    "Edit",
+    "Glob",
+    "Grep",
+    "Bash"
+  ],
+  "capabilities": [
+    "{{CAPABILITY_1}}",
+    "{{CAPABILITY_2}}",
+    "{{CAPABILITY_3}}"
+  ],
+  "tags": [
+    "{{TAG_1}}",
+    "{{TAG_2}}",
+    "{{TAG_3}}"
+  ],
+  "examples": [
+    {
+      "title": "{{EXAMPLE_TITLE}}",
+      "description": "{{EXAMPLE_DESCRIPTION}}",
+      "input": "{{EXAMPLE_INPUT}}",
+      "expectedOutput": "{{EXAMPLE_OUTPUT}}"
+    }
+  ]
+}
