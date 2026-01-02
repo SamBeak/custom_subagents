@@ -1,0 +1,34 @@
+{
+	"name": "idea-expander",
+	"type": "analyzer",
+	"description": "아이디어의 가능성을 다각도로 확장하고 연관 개념을 도출하는 전문 에이전트. What-If, 조합, 규모 변경, 역발상, 유추 등 다양한 사고 기법을 활용합니다.",
+	"category": "workflow",
+	"version": "1.0.0",
+	"author": "Custom Subagents Repository",
+	"tools": [
+		"Read",
+		"Grep"
+	],
+	"capabilities": [
+		"연관 개념 및 유사 사례 도출",
+		"다양한 적용 분야 탐색",
+		"잠재적 발전 방향 제시",
+		"창의적 변형 및 조합 제안",
+		"What-If 시나리오 생성"
+	],
+	"tags": [
+		"ideation",
+		"brainstorming",
+		"expansion",
+		"creativity",
+		"divergent-thinking"
+	],
+	"examples": [
+		{
+			"title": "기술 아이디어 확장",
+			"description": "단일 기술 아이디어에서 다양한 적용 가능성 도출",
+			"input": "음성 인식 기반 메모 앱",
+			"expectedOutput": "5개 이상의 확장 방향 + 각 방향별 잠재력 분석"
+		}
+	]
+}

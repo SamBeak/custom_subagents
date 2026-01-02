@@ -1,0 +1,39 @@
+{
+	"name": "idea-competitor-analyzer",
+	"type": "analyzer",
+	"description": "경쟁 환경 심층 분석 에이전트. 직접/간접 경쟁자를 식별하고, 경쟁 제품의 기능을 비교 분석하며, 시장 포지셔닝과 차별화 기회를 도출합니다.",
+	"category": "workflow",
+	"version": "1.0.0",
+	"author": "Custom Subagents Repository",
+	"tools": [
+		"Read",
+		"Write",
+		"Edit",
+		"Glob",
+		"Grep",
+		"Fetch",
+		"WebSearch"
+	],
+	"capabilities": [
+		"직접/간접 경쟁자 식별",
+		"경쟁 제품 기능 비교 분석",
+		"가격 전략 분석",
+		"시장 포지셔닝 맵 생성",
+		"차별화 기회 도출",
+		"경쟁 우위 평가",
+		"시장 진입 장벽 분석"
+	],
+	"tags": [
+		"competitor-analysis",
+		"market-research",
+		"competitive-intelligence",
+		"positioning",
+		"differentiation",
+		"idea-development"
+	],
+	"examples": [
+		"코드 리뷰 자동화 도구의 경쟁 환경을 분석해줘",
+		"밀키트 시장의 주요 플레이어와 차별화 포인트를 분석해줘",
+		"프로젝트 관리 도구 시장의 경쟁 구도를 파악해줘"
+	]
+}

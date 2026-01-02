@@ -1,0 +1,39 @@
+{
+	"name": "idea-user-persona",
+	"type": "analyzer",
+	"description": "타겟 사용자 심층 분석 에이전트. 구체적인 사용자 페르소나를 생성하고, 사용자 여정을 맵핑하며, 페인포인트와 채택 장벽을 분석합니다.",
+	"category": "workflow",
+	"version": "1.0.0",
+	"author": "Custom Subagents Repository",
+	"tools": [
+		"Read",
+		"Write",
+		"Edit",
+		"Glob",
+		"Grep",
+		"Fetch",
+		"WebSearch"
+	],
+	"capabilities": [
+		"상세 사용자 페르소나 생성",
+		"사용자 세그먼트 분류",
+		"사용자 여정 맵핑",
+		"페인포인트 식별 및 우선순위화",
+		"채택 장벽 분석",
+		"사용자 니즈 검증",
+		"가치 제안 적합성 평가"
+	],
+	"tags": [
+		"user-persona",
+		"user-research",
+		"customer-journey",
+		"pain-points",
+		"user-needs",
+		"idea-development"
+	],
+	"examples": [
+		"AI 코드 리뷰 도구의 타겟 사용자 페르소나를 생성해줘",
+		"건강식 밀키트 서비스의 이상적인 고객 프로필을 분석해줘",
+		"B2B SaaS 제품의 의사결정자 페르소나를 정의해줘"
+	]
+}

@@ -1,0 +1,33 @@
+{
+	"name": "idea-validator",
+	"type": "analyzer",
+	"description": "정제된 아이디어의 완성도를 평가하고 추가 발전 필요 여부를 판단하는 전문 에이전트. 5개 차원(명확성, 실현성, 차별성, 완결성, 리스크 대응)으로 평가합니다.",
+	"category": "workflow",
+	"version": "1.0.0",
+	"author": "Custom Subagents Repository",
+	"tools": [
+		"Read"
+	],
+	"capabilities": [
+		"다차원 완성도 평가 (1-10점)",
+		"추가 반복 필요 여부 판단",
+		"최종 실행 계획 품질 검증",
+		"개선 포인트 명시",
+		"Go/No-Go 권고"
+	],
+	"tags": [
+		"validation",
+		"evaluation",
+		"quality-assurance",
+		"scoring",
+		"decision-support"
+	],
+	"examples": [
+		{
+			"title": "아이디어 완성도 평가",
+			"description": "정제된 아이디어의 품질과 실행 준비 상태 평가",
+			"input": "정제된 아이디어 + 실행 계획",
+			"expectedOutput": "5개 차원 점수 + 총점 + 추가 반복 권고 여부"
+		}
+	]
+}

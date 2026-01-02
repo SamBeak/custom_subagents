@@ -1,0 +1,34 @@
+{
+	"name": "idea-critic",
+	"type": "analyzer",
+	"description": "아이디어의 약점, 리스크, 한계를 비판적으로 분석하는 전문 에이전트. Devil's Advocate 역할로 논리적 허점, 실현 가능성, 경쟁 우위, 잠재적 실패 시나리오를 검토합니다.",
+	"category": "workflow",
+	"version": "1.0.0",
+	"author": "Custom Subagents Repository",
+	"tools": [
+		"Read",
+		"Grep"
+	],
+	"capabilities": [
+		"논리적 허점 및 모순 식별",
+		"실현 가능성 리스크 분석",
+		"경쟁 및 대안 분석",
+		"잠재적 실패 시나리오 도출",
+		"가정의 취약점 검증"
+	],
+	"tags": [
+		"critical-thinking",
+		"risk-analysis",
+		"evaluation",
+		"devil-advocate",
+		"due-diligence"
+	],
+	"examples": [
+		{
+			"title": "스타트업 아이디어 비판 분석",
+			"description": "새로운 비즈니스 아이디어의 약점과 리스크 식별",
+			"input": "구독형 식료품 배달 서비스",
+			"expectedOutput": "주요 리스크 5개 + 경쟁 분석 + 실패 시나리오"
+		}
+	]
+}
