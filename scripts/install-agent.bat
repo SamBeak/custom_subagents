@@ -2,25 +2,38 @@
 setlocal enabledelayedexpansion
 
 :: Custom Subagents Installer for Claude Code
-:: This script copies selected agent files to .claude/agents directory
+:: This script copies selected agent files to ~/.claude/agents directory
 
 echo ========================================
 echo Custom Subagents Installer
 echo ========================================
 echo.
 
-:: Check if we're in the correct directory
-if not exist "agents\" (
-    echo Error: 'agents' directory not found.
-    echo Please run this script from the custom_subagents repository root.
+:: Get the directory where this script is located
+set "SCRIPT_DIR=%~dp0"
+:: Go up one level to get repository root
+set "REPO_ROOT=%SCRIPT_DIR%.."
+
+:: Set Claude agents directory (user home)
+set "CLAUDE_AGENTS_DIR=%USERPROFILE%\.claude\agents"
+
+echo Script location: %SCRIPT_DIR%
+echo Repository root: %REPO_ROOT%
+echo Target directory: %CLAUDE_AGENTS_DIR%
+echo.
+
+:: Check if agents directory exists in repo
+if not exist "%REPO_ROOT%\agents\" (
+    echo Error: 'agents' directory not found at %REPO_ROOT%\agents
+    echo Please ensure the script is in the 'scripts' folder of the repository.
     pause
     exit /b 1
 )
 
-:: Create .claude/agents directory if it doesn't exist
-if not exist ".claude\" mkdir ".claude"
-if not exist ".claude\agents\" mkdir ".claude\agents"
-echo [OK] .claude/agents directory is ready
+:: Create .claude/agents directory in user home if it doesn't exist
+if not exist "%USERPROFILE%\.claude\" mkdir "%USERPROFILE%\.claude"
+if not exist "%CLAUDE_AGENTS_DIR%\" mkdir "%CLAUDE_AGENTS_DIR%"
+echo [OK] %CLAUDE_AGENTS_DIR% is ready
 echo.
 
 :: Display available agents
@@ -29,11 +42,11 @@ echo ================
 echo.
 
 set count=0
-for /d %%C in (agents\*) do (
-    for /d %%A in (%%C\*) do (
+for /d %%C in ("%REPO_ROOT%\agents\*") do (
+    for /d %%A in ("%%C\*") do (
         set /a count+=1
         set "agent[!count!]=%%A"
-        for %%F in (%%A\agent.json) do (
+        for %%F in ("%%A\agent.json") do (
             if exist "%%F" (
                 :: Extract agent name from path
                 for %%N in (%%A) do set agentname=%%~nxN
@@ -72,12 +85,12 @@ if /i "%selection%"=="A" (
     echo Installing all agents...
     echo.
 
-    for /d %%C in (agents\*) do (
-        for /d %%A in (%%C\*) do (
+    for /d %%C in ("%REPO_ROOT%\agents\*") do (
+        for /d %%A in ("%%C\*") do (
             for %%N in (%%A) do set agentname=%%~nxN
             if exist "%%A\!agentname!.md" (
-                echo Copying !agentname!.md to .claude\agents\
-                copy /Y "%%A\!agentname!.md" ".claude\agents\" >nul
+                echo Copying !agentname!.md to %CLAUDE_AGENTS_DIR%\
+                copy /Y "%%A\!agentname!.md" "%CLAUDE_AGENTS_DIR%\" >nul
                 if !errorlevel! equ 0 (
                     echo [OK] !agentname! installed successfully
                 ) else (
@@ -112,8 +125,8 @@ for %%S in (%selection%) do (
         for %%N in (!agentpath!) do set agentname=%%~nxN
 
         if exist "!agentpath!\!agentname!.md" (
-            echo Copying !agentname!.md to .claude\agents\
-            copy /Y "!agentpath!\!agentname!.md" ".claude\agents\" >nul
+            echo Copying !agentname!.md to %CLAUDE_AGENTS_DIR%\
+            copy /Y "!agentpath!\!agentname!.md" "%CLAUDE_AGENTS_DIR%\" >nul
             if !errorlevel! equ 0 (
                 echo [OK] !agentname! installed successfully
             ) else (
@@ -132,7 +145,7 @@ echo ========================================
 echo Installation complete!
 echo ========================================
 echo.
-echo Agent files have been copied to: .claude\agents\
+echo Agent files have been copied to: %CLAUDE_AGENTS_DIR%
 echo You can now use these agents in Claude Code.
 echo.
 pause
