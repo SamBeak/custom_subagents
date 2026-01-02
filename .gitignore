@@ -138,3 +138,16 @@ $RECYCLE.BIN/
 private/
 secrets/
 credentials/
+
+# Python virtual environment
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Web UI outputs
+outputs/
+
+# Next.js
+.next/
