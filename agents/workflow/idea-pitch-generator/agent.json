@@ -1,0 +1,37 @@
+{
+	"name": "idea-pitch-generator",
+	"type": "transformer",
+	"description": "고도화된 아이디어를 설득력 있는 발표 자료로 변환하는 전문 에이전트. 투자자 피치덱, 엘리베이터 피치, 제품 소개서, 한 줄 설명 등 다양한 형태의 커뮤니케이션 자료를 생성합니다.",
+	"category": "workflow",
+	"version": "1.0.0",
+	"author": "Custom Subagents Repository",
+	"tools": ["Read", "Write", "Edit"],
+	"capabilities": [
+		"투자자 피치덱 구조 설계 (10-15 슬라이드)",
+		"엘리베이터 피치 작성 (30초/60초/90초)",
+		"한 줄 설명 (One-liner) 생성",
+		"제품 소개서 (One-pager) 작성",
+		"스토리텔링 구조 설계",
+		"핵심 메시지 도출",
+		"청중별 맞춤 메시지 (투자자/고객/파트너)"
+	],
+	"tags": [
+		"pitch",
+		"presentation",
+		"storytelling",
+		"investor",
+		"communication",
+		"deck",
+		"one-liner"
+	],
+	"examples": [
+		{
+			"input": "투자자 피치덱을 위한 슬라이드 구조를 설계해줘",
+			"output": "15슬라이드 구조 + 각 슬라이드별 핵심 메시지 + 스크립트 가이드"
+		},
+		{
+			"input": "30초 엘리베이터 피치를 작성해줘",
+			"output": "문제-솔루션-차별점-Call to Action 구조의 피치 스크립트"
+		}
+	]
+}

@@ -2,7 +2,7 @@
 
 ## Overview
 
-A Multi-Agent Orchestrator that systematically develops and refines ideas through coordinated expansion, critique, refinement, and validation cycles. Transforms initial concepts into well-developed, actionable plans.
+A Multi-Agent Orchestrator (v3.0) that systematically develops and refines ideas through **10 specialized agents** with parallel and sequential execution. Transforms initial concepts into well-developed, actionable plans with complete monetization strategies and investor pitch materials.
 
 ## Category
 
@@ -11,39 +11,49 @@ Workflow / Orchestration
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    IDEA-DEVELOPER                           │
-│                    (Orchestrator)                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│   │idea-expander │→ │ idea-critic  │→ │ idea-refiner │     │
-│   └──────────────┘  └──────────────┘  └──────────────┘     │
-│                            ↓                                │
-│                   ┌──────────────┐                         │
-│                   │idea-validator│                         │
-│                   └──────────────┘                         │
-│                            ↓                                │
-│              Score < 7: Iterate | Score ≥ 7: Finalize      │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│                        IDEA-DEVELOPER (Orchestrator)                 │
+├──────────────────────────────────────────────────────────────────────┤
+│  ┌─────────────── PARALLEL RESEARCH PHASE ──────────────┐            │
+│  │  researcher ─┬─ competitor-analyzer ─┬─ user-persona │ ← 동시실행 │
+│  └──────────────┴───────────────────────┴───────────────┘            │
+│                              ↓                                        │
+│  ┌─────────────── DEVELOPMENT CYCLE ────────────────────┐            │
+│  │  expander → critic → refiner → feasibility → validator           │
+│  └───────────────────────────┬──────────────────────────┘            │
+│                              ↓                                        │
+│              Score < 7: Iterate | Score ≥ 7: Continue                │
+│                              ↓                                        │
+│  ┌─────────────── STRATEGY & OUTPUT ────────────────────┐            │
+│  │  monetization-strategist → pitch-generator            │            │
+│  └───────────────────────────┬──────────────────────────┘            │
+│                              ↓                                        │
+│                     FINAL OUTPUT PACKAGE                              │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
-## Capabilities
+## Key Features (v3.0)
 
-- Orchestrates 4 specialized agents for comprehensive idea development
-- Manages iterative refinement cycles (up to 3 iterations)
-- Tracks development history and decision rationale
-- Produces structured final reports with execution plans
-- Handles context preservation across agent handoffs
+- **10 Specialized Agents**: Complete idea-to-pitch pipeline
+- **Parallel Research**: 3 agents run simultaneously for efficiency
+- **Monetization Strategy**: Business model, pricing, revenue projections
+- **Pitch Materials**: One-liner, elevator pitch, deck structure
+- **Iterative Refinement**: Up to 3 cycles based on validation score
 
 ## Delegated Agents
 
-| Agent | Role | Purpose |
-|-------|------|---------|
-| `idea-expander` | Expansion | Explore possibilities, generate variations |
-| `idea-critic` | Critique | Identify risks, weaknesses, blind spots |
-| `idea-refiner` | Refinement | Synthesize feedback, strengthen concept |
-| `idea-validator` | Validation | Evaluate completeness, decide iteration |
+| Agent | Phase | Purpose |
+|-------|-------|---------|
+| `idea-researcher` | Research (Parallel) | RAG/Fetch 기반 외부 정보 수집 |
+| `idea-competitor-analyzer` | Research (Parallel) | 경쟁 환경 심층 분석 |
+| `idea-user-persona` | Research (Parallel) | 타겟 사용자 페르소나 생성 |
+| `idea-expander` | Development | 가능성 확장 (5개 렌즈) |
+| `idea-critic` | Development | 약점 및 리스크 분석 |
+| `idea-refiner` | Development | 통합 및 정제 |
+| `idea-feasibility-checker` | Development | 기술적 실현 가능성 평가 |
+| `idea-validator` | Development | 완성도 평가 (7점 기준) |
+| `idea-monetization-strategist` | Strategy | 수익화 전략, BM Canvas |
+| `idea-pitch-generator` | Output | 피치덱, 엘리베이터 피치 |
 
 ## Usage
 
@@ -78,23 +88,29 @@ Task({
 
 ### Output
 
-A comprehensive development report including:
+A comprehensive package including:
 
 1. **Refined Concept**: Clarified, strengthened idea
 2. **Value Proposition**: Clear differentiation statement
 3. **Execution Plan**: Phased tasks with milestones
 4. **Risk Analysis**: Identified risks with mitigations
-5. **Development History**: All iteration details
+5. **Business Model**: Canvas, pricing, revenue projections
+6. **Pitch Materials**: One-liner, elevator pitches, deck structure
+7. **Development History**: All iteration details
 
 ## Workflow
 
 1. **Initialize**: Parse idea, create working document
-2. **Iterate** (max 3 cycles):
+2. **Parallel Research**: Market, competition, user personas (simultaneous)
+3. **Iterate** (max 3 cycles):
    - Expand possibilities
    - Critique weaknesses
    - Refine and synthesize
+   - Check feasibility
    - Validate completeness
-3. **Finalize**: Generate comprehensive report
+4. **Strategy**: Monetization and business model design
+5. **Output**: Generate pitch materials
+6. **Finalize**: Assemble comprehensive package
 
 ## Scoring System
 
@@ -122,6 +138,8 @@ A comprehensive development report including:
 
 ## Version History
 
+- **v3.0.0** (2026-01-02): Major update - 10 agents, parallel research, monetization, pitch generation
+- **v2.0.0** (2026-01-02): Added 4 specialized agents (researcher, competitor, user-persona, feasibility)
 - **v1.0.0** (2026-01-02): Initial release with 4-agent orchestration
 
 ## Author

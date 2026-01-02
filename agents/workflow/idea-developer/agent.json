@@ -1,9 +1,9 @@
 {
 	"name": "idea-developer",
 	"type": "orchestrator",
-	"description": "아이디어를 체계적으로 발전시키는 Multi-Agent 오케스트레이터. 리서치(Researcher), 확장(Expander), 비판(Critic), 정제(Refiner), 검증(Validator) 및 전문 분석 에이전트들을 조율하여 초기 아이디어를 데이터 기반의 고도화된 실행 계획으로 변환합니다.",
+	"description": "아이디어를 체계적으로 발전시키는 Multi-Agent 오케스트레이터. 10개 전문 에이전트를 병렬/순차 조율하여 초기 아이디어를 데이터 기반의 고도화된 실행 계획과 피치 자료로 변환합니다. Research Phase는 병렬 실행으로 효율성을 극대화합니다.",
 	"category": "workflow",
-	"version": "2.0.0",
+	"version": "3.0.0",
 	"author": "Custom Subagents Repository",
 	"tools": [
 		"Read",
@@ -17,13 +17,16 @@
 	],
 	"capabilities": [
 		"초기 아이디어를 구조화된 발전 프로세스로 처리",
-		"8개 전문 에이전트 조율 (Research, Expand, Critic, Refine, Validate + 전문 분석)",
+		"10개 전문 에이전트 조율 (Research, Analysis, Development, Strategy, Communication)",
+		"병렬 Research Phase (researcher + competitor + user-persona 동시 실행)",
 		"RAG 기반 외부 정보 수집 및 데이터 기반 분석",
 		"경쟁 환경 및 시장 분석",
 		"기술적 실현 가능성 평가",
 		"타겟 사용자 페르소나 및 여정 분석",
+		"수익화 전략 및 비즈니스 모델 설계",
+		"투자자 피치 자료 및 커뮤니케이션 패키지 생성",
 		"반복적 개선 사이클 관리 (최대 3회)",
-		"최종 고도화된 아이디어 + 실행 계획 생성"
+		"최종 고도화된 아이디어 + 실행 계획 + 피치 패키지 생성"
 	],
 	"tags": [
 		"idea-development",
@@ -35,7 +38,10 @@
 		"strategic-planning",
 		"rag",
 		"market-research",
-		"competitive-analysis"
+		"competitive-analysis",
+		"monetization",
+		"pitch",
+		"parallel-processing"
 	],
 	"delegatesTo": [
 		"idea-researcher",
@@ -45,7 +51,9 @@
 		"idea-validator",
 		"idea-feasibility-checker",
 		"idea-competitor-analyzer",
-		"idea-user-persona"
+		"idea-user-persona",
+		"idea-monetization-strategist",
+		"idea-pitch-generator"
 	],
 	"examples": [
 		{

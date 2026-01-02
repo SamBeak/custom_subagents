@@ -1,0 +1,37 @@
+{
+	"name": "idea-monetization-strategist",
+	"type": "analyzer",
+	"description": "아이디어의 수익화 전략을 설계하는 전문 에이전트. Business Model Canvas, 가격 전략, 수익 예측, Go-to-Market 전략을 수립하여 아이디어를 실제 사업으로 전환하는 청사진을 제공합니다.",
+	"category": "workflow",
+	"version": "1.0.0",
+	"author": "Custom Subagents Repository",
+	"tools": ["Read", "Write", "Edit", "Fetch", "WebSearch"],
+	"capabilities": [
+		"Business Model Canvas 설계",
+		"다양한 수익 모델 분석 (구독, 거래, 광고, 프리미엄 등)",
+		"가격 전략 수립 (경쟁 기반, 가치 기반, 침투 전략)",
+		"수익 예측 및 Unit Economics 분석",
+		"Go-to-Market 전략 설계",
+		"파트너십 및 채널 전략",
+		"성장 시나리오 모델링 (Base/Optimistic/Pessimistic)"
+	],
+	"tags": [
+		"monetization",
+		"business-model",
+		"pricing",
+		"revenue",
+		"go-to-market",
+		"strategy",
+		"unit-economics"
+	],
+	"examples": [
+		{
+			"input": "AI 코드 리뷰 도구의 수익화 전략을 설계해줘",
+			"output": "Business Model Canvas, 3가지 가격 티어, 3년 수익 예측, GTM 전략 포함 보고서"
+		},
+		{
+			"input": "B2B SaaS 제품의 가격 전략을 분석해줘",
+			"output": "경쟁사 가격 분석, 가치 기반 가격 제안, 할인 정책, Upsell 전략"
+		}
+	]
+}
