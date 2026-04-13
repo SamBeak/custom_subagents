@@ -1,0 +1,61 @@
+{
+  "name": "weekly-work-reporter",
+  "type": "orchestrator",
+  "description": "일일업무보고(월~금)를 분석하여 Top 1% 품질의 주간업무보고를 생성하는 에이전트. 프로젝트별 업무 그룹핑, Executive Summary, 진행률 추적, 다음 주 계획을 포함한 경영진 보고 수준의 주간 리포트를 Obsidian에 저장합니다.",
+  "category": "workflow",
+  "version": "1.0.0",
+  "author": "Custom Subagents Repository",
+  "tools": [
+    "Bash",
+    "mcp__obsidian__obsidian_list_files_in_dir",
+    "mcp__obsidian__obsidian_get_file_contents",
+    "mcp__obsidian__obsidian_batch_get_file_contents",
+    "mcp__obsidian__obsidian_append_content",
+    "mcp__obsidian__obsidian_patch_content",
+    "mcp__obsidian__obsidian_simple_search",
+    "mcp__obsidian__obsidian_get_periodic_note"
+  ],
+  "capabilities": [
+    "Obsidian 일일업무보고 파일 자동 탐색 및 일괄 읽기",
+    "평일(월~금) 파일만 선별, 주말 파일 자동 제외",
+    "프로젝트별 업무 그룹핑 및 중복 업무 병합",
+    "주간 진행률 변화 추적 (시작값 → 최종값)",
+    "경영진 보고 수준 Executive Summary 생성",
+    "리스크/블로커 종합 정리",
+    "다음 주 업무 계획 자동 도출",
+    "기술 용어를 비전문가도 이해할 수 있는 쉬운 한국어로 변환",
+    "Obsidian 주간업무보고 디렉토리에 자동 저장"
+  ],
+  "tags": [
+    "weekly-report",
+    "obsidian",
+    "korean",
+    "mcp",
+    "주간업무보고",
+    "executive-summary",
+    "work-log",
+    "non-technical",
+    "automation",
+    "aggregation"
+  ],
+  "examples": [
+    {
+      "title": "이번 주 주간업무보고 생성",
+      "description": "이번 주 월~금 일일업무보고를 분석하여 주간보고서 생성",
+      "input": "이번 주 주간업무보고 작성해줘",
+      "expectedOutput": "주간업무보고/2026-W16.md 파일 생성 (Executive Summary + 프로젝트별 실적 + 다음 주 계획)"
+    },
+    {
+      "title": "특정 주차 주간업무보고",
+      "description": "사용자가 지정한 날짜 범위의 주간보고서 생성",
+      "input": "4월 6일~10일 주간업무보고 만들어줘",
+      "expectedOutput": "해당 주의 일일보고서를 분석하여 주간보고서 생성"
+    },
+    {
+      "title": "부분 주 보고서",
+      "description": "일일보고서가 일부 날짜만 존재하는 경우",
+      "input": "이번 주 주간보고 작성해줘 (수~금만 보고서 있음)",
+      "expectedOutput": "존재하는 3일분 보고서로 주간보고서 생성, 누락 날짜 명시"
+    }
+  ]
+}

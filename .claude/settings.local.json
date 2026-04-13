@@ -10,7 +10,14 @@
       "mcp__obsidian__obsidian_append_content",
       "mcp__obsidian__obsidian_get_periodic_note",
       "mcp__obsidian__obsidian_patch_content",
-      "mcp__obsidian__obsidian_simple_search"
+      "mcp__obsidian__obsidian_simple_search",
+      "mcp__obsidian__obsidian_list_files_in_vault",
+      "Bash(xargs ls:*)",
+      "mcp__obsidian__obsidian_list_files_in_dir",
+      "Bash(echo \"exit code: $?\")",
+      "Bash(ls:*)",
+      "mcp__obsidian__obsidian_batch_get_file_contents",
+      "mcp__obsidian__obsidian_get_recent_changes"
     ],
     "deny": [],
     "ask": []
