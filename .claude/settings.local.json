@@ -17,7 +17,10 @@
       "Bash(echo \"exit code: $?\")",
       "Bash(ls:*)",
       "mcp__obsidian__obsidian_batch_get_file_contents",
-      "mcp__obsidian__obsidian_get_recent_changes"
+      "mcp__obsidian__obsidian_get_recent_changes",
+      "Read(//c/tmp/**)",
+      "Bash(unzip -q \"/c/Users/ATL/Desktop/baekhyungyu/git_repo/custom_subagents/docs/1_ref/[보고]-연구개발팀 일일업무보고_백현규_4m2w.pptx\")",
+      "Bash(wc -l /tmp/ppt/slideLayouts/*.xml)"
     ],
     "deny": [],
     "ask": []
