@@ -1,0 +1,71 @@
+{
+  "name": "project-wbs-gantt-designer",
+  "type": "orchestrator",
+  "description": "일일·주간업무보고를 분석하여 특정 프로젝트의 WBS(작업 분해 구조)와 간트 차트를 순방향(계획 우선)으로 설계·작성하는 에이전트. 보고서의 기존 작업 + 사용자 목표/마감일을 결합해 완료~진행~미래 작업을 계층 분해하고, 마감일을 역산하여 Mermaid 간트 일정을 자동 배분합니다. 프로젝트관리/ 디렉토리에 저장하며, 재실행 시 진행률을 병합 갱신하고 수동 편집을 보존합니다.",
+  "category": "workflow",
+  "version": "1.0.0",
+  "author": "Custom Subagents Repository",
+  "tools": [
+    "Bash",
+    "mcp__obsidian__obsidian_list_files_in_dir",
+    "mcp__obsidian__obsidian_get_file_contents",
+    "mcp__obsidian__obsidian_batch_get_file_contents",
+    "mcp__obsidian__obsidian_append_content",
+    "mcp__obsidian__obsidian_patch_content",
+    "mcp__obsidian__obsidian_simple_search",
+    "mcp__obsidian__obsidian_complex_search"
+  ],
+  "capabilities": [
+    "일일·주간업무보고에서 특정 프로젝트 작업 자동 수집 및 동일 업무 병합",
+    "프로젝트별 그룹핑 (H2 헤더/frontmatter project/키워드 추론)",
+    "보고서 진행률 추적 (시작값 → 최종값) 및 현재값 산출",
+    "순방향(계획 우선) WBS 설계: 목표를 단계·작업으로 톱다운 분해",
+    "완료~진행~미래 작업을 포괄하는 10진 번호 계층 WBS 구성",
+    "부모 노드 진행률 가중 평균 롤업 자동 산출",
+    "마감일 역산 기반 간트 일정 자동 배분 (의존성/복잡도 고려)",
+    "Mermaid gantt 차트 생성 (done/active/미래 상태 + 마일스톤)",
+    "카테고리 태그(FEAT/BUG/REFACTOR/OPS/DOC/QA) 보고서 승계 및 추론",
+    "기술 용어를 비전문가도 이해할 수 있는 쉬운 한국어로 변환",
+    "프로젝트관리/ 디렉토리에 프로젝트별 1파일로 저장",
+    "재실행 시 진행률 병합 갱신 + 신규 작업 추가 + 수동 편집 보존",
+    "경량 변경 이력(changelog) 누적 기록",
+    "patch_content H1::H2 헤딩 경로 자동 생성으로 invalid-target 에러 회피"
+  ],
+  "tags": [
+    "wbs",
+    "gantt",
+    "project-management",
+    "obsidian",
+    "korean",
+    "mcp",
+    "프로젝트관리",
+    "작업분해구조",
+    "간트차트",
+    "mermaid",
+    "forward-planning",
+    "work-log",
+    "non-technical",
+    "automation",
+    "progress-rollup"
+  ],
+  "examples": [
+    {
+      "title": "신규 프로젝트 WBS·간트 설계",
+      "description": "보고서 분석 + 사용자 목표/마감일로 순방향 WBS와 간트 차트 생성",
+      "input": "A 프로젝트 WBS랑 간트 만들어줘. 7월 31일까지 1차 오픈 목표야",
+      "expectedOutput": "프로젝트관리/A-프로젝트.md 생성 (개요 + 계층 WBS + 마감일 역산 Mermaid 간트 + 진행 현황)"
+    },
+    {
+      "title": "프로젝트명만으로 설계 (인터뷰 보강)",
+      "description": "사용자가 프로젝트명만 주면 보고서 추론 후 누락분만 질문",
+      "input": "결제 시스템 프로젝트 WBS 짜줘",
+      "expectedOutput": "보고서에서 결제 관련 작업 수집 → 목표/마감일 질문 → WBS+간트 초안 생성"
+    },
+    {
+      "title": "누적 갱신",
+      "description": "이미 WBS 파일이 있을 때 새 보고서 진행률을 병합 갱신",
+      "input": "A 프로젝트 WBS 업데이트해줘",
+      "expectedOutput": "기존 WBS 진행률 갱신 + 신규 작업 추가 + 간트 재배분 + 변경 이력 기록 (수동 편집 보존)"
+    }
+  ]
+}
