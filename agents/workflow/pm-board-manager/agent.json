@@ -1,0 +1,67 @@
+{
+  "name": "pm-board-manager",
+  "type": "agent",
+  "description": "일일/주간업무보고와 이전 PM 보드를 시간축으로 교차 분석하여, 지연·정체·리스크·우선순위·포트폴리오를 추적하는 개인 PM 에이전트. 약속 이행률·리스크 경과일·정체 일수를 누적 계산하며 '살아있는 PM 보드'(PM보드/PM-Board.md) 하나를 유지·갱신합니다. PM 점검/PM 보드 갱신 요청 시 사용.",
+  "category": "workflow",
+  "version": "1.0.0",
+  "author": "Custom Subagents Repository",
+  "tools": [
+    "Bash",
+    "mcp__obsidian__obsidian_list_files_in_dir",
+    "mcp__obsidian__obsidian_get_file_contents",
+    "mcp__obsidian__obsidian_batch_get_file_contents",
+    "mcp__obsidian__obsidian_append_content",
+    "mcp__obsidian__obsidian_patch_content",
+    "mcp__obsidian__obsidian_simple_search"
+  ],
+  "capabilities": [
+    "이전 PM 보드 + 일일/주간보고의 시간축 교차 분석",
+    "약속('내일 할 일'/'다음 주 계획') 이행 추적 및 이행률 산정",
+    "진행률 정체 감지 및 정체 일수 카운트 (정체임계일 기본 3영업일)",
+    "리스크/블로커 에이징 — 최초 발견일 보존, 경과일 누적, 상태 기계(신규/진행중/악화/해결)",
+    "외부 의존성 대기 추적 (대기 일수 포함)",
+    "WIP(동시 진행) 모니터링 및 과다 경고 (WIP임계 기본 8) + 미룰 후보 제안",
+    "다음 액션 우선순위(P0~P2) 자동 배정",
+    "멀티 프로젝트 포트폴리오 보드 (상태·최근활동·진행중·리스크·다음 마일스톤)",
+    "사용자 정의 마일스톤 우선 추적, 미정의 시 주간보고 기반 추론",
+    "단일 PM 보드 파일 유지 — 현황 섹션 교체 + 변경 이력 누적",
+    "초기/갱신 실행 모드 자동 판별 (이전 보드 존재 여부)",
+    "patch_content H1::H2 헤딩 경로로 invalid-target 에러 회피",
+    "원본 보고서 무수정 (읽기 전용)"
+  ],
+  "tags": [
+    "pm-board",
+    "project-management",
+    "obsidian",
+    "korean",
+    "mcp",
+    "PM",
+    "지연추적",
+    "risk-aging",
+    "wip-monitoring",
+    "portfolio",
+    "promise-tracking",
+    "workflow",
+    "management"
+  ],
+  "examples": [
+    {
+      "title": "PM 보드 갱신",
+      "description": "최근 영업일의 일일보고와 이전 PM 보드를 비교하여 보드 갱신",
+      "input": "PM 점검해줘",
+      "expectedOutput": "PM보드/PM-Board.md 갱신 (약속 이행률·정체·리스크 경과일 누적, 다음 액션 우선순위)"
+    },
+    {
+      "title": "기간 지정 점검",
+      "description": "사용자가 지정한 기간으로 PM 보드 분석",
+      "input": "최근 2주 PM 보드 갱신해줘",
+      "expectedOutput": "최근 2주 일일보고 + 이전 보드 비교 후 보드 갱신, 변경 이력 누적"
+    },
+    {
+      "title": "초기 보드 생성",
+      "description": "이전 PM 보드가 없는 첫 실행",
+      "input": "PM 보드 만들어줘",
+      "expectedOutput": "PM보드/PM-Board.md 신규 생성 (베이스라인, 모든 항목 신규·경과일 0)"
+    }
+  ]
+}
