@@ -1,0 +1,57 @@
+{
+  "name": "team-lead-weekly-briefing",
+  "type": "agent",
+  "description": "사용자가 지정한 Obsidian의 주간업무보고 파일과 일일업무보고 파일을 읽고 교차 분석하여, 팀장이 주간보고 회의에서 구두로 보고할 브리핑 스크립트(포인트 + 멘트 2단 구조)를 생성해 Obsidian '보고/' 폴더에 저장하는 에이전트.",
+  "category": "workflow",
+  "version": "1.0.0",
+  "author": "Custom Subagents Repository",
+  "tools": [
+    "Bash",
+    "mcp__obsidian__obsidian_list_files_in_dir",
+    "mcp__obsidian__obsidian_get_file_contents",
+    "mcp__obsidian__obsidian_batch_get_file_contents",
+    "mcp__obsidian__obsidian_append_content",
+    "mcp__obsidian__obsidian_simple_search"
+  ],
+  "capabilities": [
+    "지정된 주간업무보고/일일업무보고 파일 자동 로드",
+    "주간보고-일일보고 교차 분석으로 숨은 시그널 추출",
+    "팀장 관점의 Highlights/Ongoing/리스크/Asks/Credit/다음 주 포커스 구조화",
+    "각 항목에 포인트(요점) + 멘트(구어체 발화문) 2단 구조 제공",
+    "실무 보고서를 임원 대상 구두 보고 언어로 변환",
+    "Obsidian '보고/' 폴더에 YYYY-WNN-팀장브리핑.md 자동 저장",
+    "주차만 지정해도 월~금 평일 일일보고를 자동 수집"
+  ],
+  "tags": [
+    "team-lead",
+    "briefing",
+    "weekly-report",
+    "obsidian",
+    "korean",
+    "mcp",
+    "팀장보고",
+    "executive-briefing",
+    "talking-points",
+    "workflow"
+  ],
+  "examples": [
+    {
+      "title": "주간보고 + 일일보고 지정",
+      "description": "특정 주간보고와 해당 주 일일보고를 함께 분석하여 팀장 브리핑 생성",
+      "input": "주간업무보고/2026-W16.md와 이번 주 일일업무보고로 팀장 브리핑 만들어줘",
+      "expectedOutput": "보고/2026-W16-팀장브리핑.md 파일 생성 (Highlights, Ongoing, Risks, Asks, Credit, 다음 주 포커스)"
+    },
+    {
+      "title": "주차 지정 자동 탐색",
+      "description": "주차만 지정하면 주간보고와 월~금 일일보고를 자동 수집",
+      "input": "이번 주 팀장 브리핑 만들어줘",
+      "expectedOutput": "이번 주 주간보고 + 평일 일일보고 자동 수집 후 브리핑 초안 작성 및 저장"
+    },
+    {
+      "title": "일일보고만 기반 축약 브리핑",
+      "description": "주간보고가 없고 일일보고 일부만 있는 경우의 축약형 브리핑",
+      "input": "이번 주 수~금 일일업무보고만 보고 브리핑 초안 만들어줘",
+      "expectedOutput": "해당 일일보고로 축약형 팀장 브리핑 생성, 자료 부족 섹션은 명시"
+    }
+  ]
+}

@@ -23,6 +23,9 @@
 - Obsidian 데일리 노트 또는 전용 파일에 저장
 - 기존 보고서 감지 시 중복 없이 병합 업데이트
 - Obsidian 최근 변경사항 참조로 누락 업무 보완
+- **카테고리 태그 자동 추론** (FEAT/BUG/REFACTOR/OPS/DOC/QA) — 주간보고 차트 정확도 향상
+- **선택 메타데이터 지원**: 공수(시간), 우선순위, PR/JIRA 식별자, frontmatter 합계
+- git 커밋 prefix → 카테고리 태그 자동 매핑
 
 ## Tools Available
 
@@ -152,6 +155,15 @@ tags: [daily-report, work-log]
 4. **개인 업무 로그**: Obsidian에 체계적으로 업무 기록을 축적
 
 ## Version History
+
+- **v1.1.0** - 메타데이터 보강 (주간보고 차트 정확도 향상)
+  - 카테고리 태그 자동 추론 (`[FEAT]/[BUG]/[REFACTOR]/[OPS]/[DOC]/[QA]`)
+  - git 커밋 prefix(feat/fix/refactor/docs/test/chore) → 카테고리 태그 매핑
+  - 사용자 명시 시 공수(`(2h)`, `(0.5d)`)·우선순위(`[P0]`, `[Critical]`) backtick 표기
+  - 사용자·git 로그에서 PR/JIRA/이슈 식별자 자동 추출 후 추적성 라인 추가
+  - frontmatter `total_hours`/`focus_project` 선택 필드 지원
+  - 모든 신규 메타데이터는 후위호환 — 기존 보고서 형식도 그대로 유효
+  - 추정·환산·강제 질문 금지 규칙 추가 (사용자 명시 시만 부착)
 
 - **v1.0.0** - 초기 릴리즈
   - 일일업무보고 작성 및 Obsidian 저장

@@ -1,0 +1,113 @@
+{
+  "name": "weekly-report-ppt-generator",
+  "type": "orchestrator",
+  "description": "Obsidian 주간업무보고 Markdown 노트를 레퍼런스 PPT와 동일한 디자인의 PowerPoint(.pptx) 파일로 변환하는 에이전트. 레퍼런스 복사+치환 전략과 블록 템플릿 동적 복제 전략을 혼합하여 19슬라이드 구조의 보고서를 생성하며, python-pptx와 전용 스킬(weekly-report-ppt-builder)을 사용합니다.",
+  "category": "workflow",
+  "version": "1.0.0",
+  "author": "Custom Subagents Repository",
+  "model": "opus",
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "mcp__obsidian__obsidian_list_files_in_dir",
+    "mcp__obsidian__obsidian_get_file_contents",
+    "mcp__obsidian__obsidian_simple_search",
+    "mcp__filesystem__read_file",
+    "mcp__filesystem__write_file",
+    "mcp__filesystem__get_file_info"
+  ],
+  "skills": [
+    "weekly-report-ppt-builder"
+  ],
+  "dependencies": {
+    "python": ">=3.9",
+    "pip_packages": [
+      "python-pptx>=0.6.21",
+      "PyYAML"
+    ],
+    "upstream_agents": [
+      "weekly-work-reporter"
+    ]
+  },
+  "capabilities": [
+    "Obsidian 주간업무보고 Markdown 노트 탐색 및 파싱 (YAML frontmatter + H2/H3 + 표)",
+    "섹션 → 슬라이드 매핑 (요약/프로젝트/WBS/다음주)",
+    "레퍼런스 PPT 복사 + run 단위 플레이스홀더 치환 (포맷 보존)",
+    "블록 템플릿 동적 복제 (copy.deepcopy + _sldIdLst 조작)",
+    "한글 폰트 이중 주입 (run.font.name + XML East Asian typeface)",
+    "슬라이드 플랜 사전 제시 및 사용자 승인 체크포인트",
+    "생성 파일 검증 (슬라이드 수, ZIP 무결성, 필수 키워드)",
+    "Obsidian vault 파일시스템 직접 저장 (바이너리 .pptx)",
+    "python-pptx 함정 10종 회피 (차트 rId, 포맷 소실, 셀 병합, 파일 잠금 등)"
+  ],
+  "tags": [
+    "weekly-report",
+    "pptx",
+    "powerpoint",
+    "python-pptx",
+    "obsidian",
+    "korean",
+    "주간업무보고",
+    "ppt-generation",
+    "template-replacement",
+    "mcp"
+  ],
+  "triggers": {
+    "should_trigger": [
+      "주간업무보고 PPT 만들어줘",
+      "주간보고서 ppt로 변환해줘",
+      "이번 주 보고서 PPT 생성",
+      "weekly report pptx",
+      "2026-04-10 주간업무 PPT"
+    ],
+    "should_not_trigger": [
+      "일일업무보고 PPT 만들어줘",
+      "주간업무보고 작성해줘",
+      "PPT 템플릿 디자인해줘"
+    ]
+  },
+  "examples": [
+    {
+      "title": "이번 주 주간업무보고 PPT 생성",
+      "description": "이번 주 주간 Markdown 노트를 PPT로 변환",
+      "input": "이번 주 주간업무보고 PPT 만들어줘",
+      "expectedOutput": "주간업무보고/YYYY-MM-DD~YYYY-MM-DD.pptx 생성 (표지 1 / 요약 1 / 프로젝트 M / WBS K / 다음주 1)"
+    },
+    {
+      "title": "특정 파일 명시 지정",
+      "description": "사용자가 Markdown 경로를 명시한 경우",
+      "input": "주간업무보고/2026-04-10~2026-04-13.md를 PPT로 만들어줘",
+      "expectedOutput": "지정 파일 기반 .pptx 생성"
+    },
+    {
+      "title": "선행 산출물 부재",
+      "description": "대상 주의 Markdown 노트가 없을 때",
+      "input": "이번 주 주간보고서 ppt로",
+      "expectedOutput": "'weekly-work-reporter로 먼저 주간 Markdown 생성' 안내 후 중단"
+    }
+  ],
+  "workflow": {
+    "phases": [
+      "Phase 0 — 사전 점검 (python-pptx/assets/쓰기권한)",
+      "Phase 1 — 입력 확정 (주차 계산 + Obsidian 노트 읽기)",
+      "Phase 2 — 노트 파싱 (sections.json)",
+      "Phase 3 — 슬라이드 플랜 + 사용자 승인 체크포인트",
+      "Phase 4a — 고정 슬라이드 치환 (표지/요약)",
+      "Phase 4b — 블록 동적 삽입 (프로젝트/WBS/다음주)",
+      "Phase 5 — 검증 및 저장 + 완료 리포트"
+    ]
+  },
+  "change_log": [
+    {
+      "date": "2026-04-16",
+      "change": "초기 구성",
+      "reason": "주간업무보고 PPT 자동 생성 요구 — 레퍼런스 디자인 재현"
+    },
+    {
+      "date": "2026-04-20",
+      "change": "에이전트 정의 파일 커밋 (agents/workflow/weekly-report-ppt-generator/)",
+      "reason": "04/16 설계안 기반 구현 착수"
+    }
+  ]
+}

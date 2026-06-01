@@ -1,0 +1,127 @@
+{
+  "name": "weekly-report-ppt-prompt-generator",
+  "type": "orchestrator",
+  "description": "Obsidian 주간업무보고 Markdown 노트를 분석하여, 생성형 AI(Gamma, Manus, ChatGPT, Claude, Gemini)가 곧바로 PPT를 만들 수 있는 완결형 프롬프트 Markdown 파일을 `주간업무보고_프롬프트/` 폴더에 생성하는 에이전트. 5파트 구조(역할·슬라이드스펙·디자인가이드·원본콘텐츠·출력포맷)의 프롬프트를 작성합니다.",
+  "category": "workflow",
+  "version": "1.0.0",
+  "author": "Custom Subagents Repository",
+  "model": "sonnet",
+  "tools": [
+    "Bash",
+    "Read",
+    "Write",
+    "mcp__obsidian__obsidian_list_files_in_dir",
+    "mcp__obsidian__obsidian_get_file_contents",
+    "mcp__obsidian__obsidian_append_content",
+    "mcp__obsidian__obsidian_simple_search",
+    "mcp__obsidian__obsidian_patch_content"
+  ],
+  "dependencies": {
+    "upstream_agents": [
+      "weekly-work-reporter"
+    ],
+    "required_folders": {
+      "input": "주간업무보고/",
+      "output": "주간업무보고_프롬프트/"
+    }
+  },
+  "capabilities": [
+    "Obsidian 주간업무보고 Markdown 탐색 및 파싱 (YAML + H2/H3 + 표 + 체크박스)",
+    "섹션 → 슬라이드 매핑 (표지/요약/프로젝트/WBS/다음주)",
+    "생성형 AI용 5파트 프롬프트 작성 (역할·스펙·디자인·콘텐츠·포맷)",
+    "레퍼런스 디자인 스펙 전달 (맑은 고딕, 나눔스퀘어 네오 Heavy, Office Blue #4472C4, 16:9)",
+    "생성형 AI별 사용법 안내 (Gamma, Manus, ChatGPT Canvas, Claude Artifacts, Gemini)",
+    "슬라이드 플랜 사전 제시 + 사용자 승인 체크포인트",
+    "Obsidian `주간업무보고_프롬프트/` 자동 저장",
+    "파일명 패턴 유연 매칭 (월~금/화~월 등 다양한 주차 정의 허용)"
+  ],
+  "tags": [
+    "weekly-report",
+    "ppt-prompt",
+    "prompt-engineering",
+    "gamma",
+    "manus",
+    "chatgpt",
+    "claude-artifacts",
+    "gemini",
+    "obsidian",
+    "korean",
+    "주간업무보고",
+    "생성형AI",
+    "mcp"
+  ],
+  "triggers": {
+    "should_trigger": [
+      "주간업무보고 PPT 프롬프트 만들어줘",
+      "주간보고서를 PPT 프롬프트로 변환",
+      "이번 주 보고서 생성형 AI용 프롬프트",
+      "2026-04-14~2026-04-20 주간업무보고를 PPT로 만들 수 있는 프롬프트 생성",
+      "주간업무보고_프롬프트 생성",
+      "Gamma용 주간보고 프롬프트"
+    ],
+    "should_not_trigger": [
+      "주간업무보고 PPT 만들어줘",
+      "주간업무보고 작성해줘",
+      "일일업무보고 PPT 프롬프트"
+    ]
+  },
+  "examples": [
+    {
+      "title": "이번 주 주간업무보고 PPT 프롬프트 생성",
+      "description": "이번 주 주간 Markdown을 생성형 AI용 프롬프트로 변환",
+      "input": "이번 주 주간업무보고 PPT 프롬프트 만들어줘",
+      "expectedOutput": "주간업무보고_프롬프트/YYYY-MM-DD~YYYY-MM-DD_ppt_prompt.md 생성 (5파트 구조)"
+    },
+    {
+      "title": "특정 주 노트 명시 지정",
+      "description": "사용자가 파일명을 명시한 경우",
+      "input": "주간업무보고/2026-04-14~2026-04-20.md를 PPT 프롬프트로 만들어줘",
+      "expectedOutput": "주간업무보고_프롬프트/2026-04-14~2026-04-20_ppt_prompt.md 생성"
+    },
+    {
+      "title": "대상 생성형 AI 지정",
+      "description": "사용자가 Gamma 전용 프롬프트 요청",
+      "input": "이번 주 주간보고 Gamma용 프롬프트 생성",
+      "expectedOutput": "Gamma.app 출력 포맷(슬라이드 구분자 ---)에 최적화된 프롬프트 생성"
+    }
+  ],
+  "workflow": {
+    "phases": [
+      "Phase 1 — 입력 확정 (주차 계산 + Obsidian 노트 읽기)",
+      "Phase 2 — 노트 파싱 (frontmatter + 요약 + 프로젝트 + WBS + 다음주)",
+      "Phase 3 — 슬라이드 플랜 + 사용자 승인 체크포인트",
+      "Phase 4 — 5파트 프롬프트 Markdown 작성 (역할/스펙/디자인/콘텐츠/포맷)",
+      "Phase 5 — 초안 확인 + 주간업무보고_프롬프트/ 저장 + 사용법 안내"
+    ]
+  },
+  "output_spec": {
+    "path_pattern": "주간업무보고_프롬프트/{원본파일명}_ppt_prompt.md",
+    "format": "Markdown with YAML frontmatter",
+    "frontmatter_fields": [
+      "type: ppt-prompt",
+      "source",
+      "slides",
+      "created",
+      "target-ai"
+    ]
+  },
+  "related_agents": [
+    {
+      "name": "weekly-work-reporter",
+      "relation": "upstream",
+      "note": "주간업무보고 Markdown 노트를 생성하는 선행 에이전트"
+    },
+    {
+      "name": "weekly-report-ppt-generator",
+      "relation": "sibling",
+      "note": "동일 입력을 python-pptx로 직접 .pptx 생성하는 형제 에이전트 (이쪽은 프롬프트 생성)"
+    }
+  ],
+  "change_log": [
+    {
+      "date": "2026-04-20",
+      "change": "초기 구성",
+      "reason": "생성형 AI 기반 PPT 제작을 위한 프롬프트 자동화 요구"
+    }
+  ]
+}

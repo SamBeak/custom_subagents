@@ -3,7 +3,7 @@
   "type": "orchestrator",
   "description": "일일업무보고(월~금)를 분석하여 Top 1% 품질의 주간업무보고를 생성하는 에이전트. 프로젝트별 업무 그룹핑, Executive Summary, 진행률 추적, 다음 주 계획을 포함한 경영진 보고 수준의 주간 리포트를 Obsidian에 저장합니다.",
   "category": "workflow",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "author": "Custom Subagents Repository",
   "tools": [
     "Bash",
@@ -24,6 +24,13 @@
     "리스크/블로커 종합 정리",
     "다음 주 업무 계획 자동 도출",
     "기술 용어를 비전문가도 이해할 수 있는 쉬운 한국어로 변환",
+    "프로젝트별 공수(Effort) 점수 산정 및 비율 정규화 (항목 수·진행률 변화·복잡도·다일 등장 기반 휴리스틱)",
+    "일일보고에 시간 단위(2h/0.5d) 명시 시 시간 기반 공수 산정 자동 전환",
+    "차트 4종 강제 생성: 프로젝트별 공수 배분(Mermaid pie) + 업무 유형별 비중(Mermaid pie) + 일자별 처리 추이(유니코드 바 표) + 프로젝트별 완료 현황(유니코드 바 표)",
+    "조건부 추가 차트: 진행 중 업무 gantt(이월 3건+), 리스크 매트릭스 quadrantChart(P0 메타 2건+), 일자별 누적 시간 xychart-beta(total_hours 일관 시)",
+    "카테고리 태그(FEAT/BUG/REFACTOR/OPS/DOC/QA) 기반 업무 유형 자동 분류 + 키워드 휴리스틱 폴백",
+    "patch_content H1::H2 헤딩 경로 자동 생성으로 invalid-target 에러 회피",
+    "차트화 정확도 향상을 위한 일일보고 메타데이터 보강 제안",
     "Obsidian 주간업무보고 디렉토리에 자동 저장"
   ],
   "tags": [
@@ -36,7 +43,11 @@
     "work-log",
     "non-technical",
     "automation",
-    "aggregation"
+    "aggregation",
+    "mermaid",
+    "pie-chart",
+    "effort-allocation",
+    "visualization"
   ],
   "examples": [
     {
