@@ -63,6 +63,7 @@ Agents specialized in generating and analyzing technical documentation.
 - `rfp-analyzer`: Analyze RFP documents for Korean government projects
 - `rfp-respondent`: Generate responses to RFP requirements
 - `trd-generator`: Generate Technical Requirements Documents
+- `gov-docx-report-writer`: Generate Word(.docx) reports in Korean government official-document style
 
 ### Business
 Agents for business analysis, project planning, and strategic documentation.
