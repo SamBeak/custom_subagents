@@ -3,7 +3,7 @@
   "type": "orchestrator",
   "description": "일일업무보고(월~금)를 분석하여 Top 1% 품질의 주간업무보고를 생성하는 에이전트. 프로젝트별 업무 그룹핑, Executive Summary, 진행률 추적, 다음 주 계획을 포함한 경영진 보고 수준의 주간 리포트를 Obsidian에 저장합니다.",
   "category": "workflow",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": "Custom Subagents Repository",
   "tools": [
     "Bash",
@@ -18,7 +18,7 @@
   "capabilities": [
     "Obsidian 일일업무보고 파일 자동 탐색 및 일괄 읽기",
     "평일(월~금) 파일만 선별, 주말 파일 자동 제외",
-    "프로젝트별 업무 그룹핑 및 중복 업무 병합",
+    "프로젝트별 업무 그룹핑 및 중복 업무 병합 (daily-work-reporter 인라인 {프로젝트} 태그 최우선 인식 → H2 헤더 → frontmatter project → 괄호/제목 키워드 추론 순)",
     "주간 진행률 변화 추적 (시작값 → 최종값)",
     "경영진 보고 수준 Executive Summary 생성",
     "리스크/블로커 종합 정리",
@@ -47,7 +47,8 @@
     "mermaid",
     "pie-chart",
     "effort-allocation",
-    "visualization"
+    "visualization",
+    "project-tag"
   ],
   "examples": [
     {
