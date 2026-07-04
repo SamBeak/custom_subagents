@@ -3,7 +3,7 @@
   "type": "orchestrator",
   "description": "일일업무보고를 비전문가도 이해할 수 있는 쉬운 한국어로 작성하여 Obsidian에 저장하는 에이전트. 기존 보고서가 있으면 업데이트하고, 없으면 새로 생성합니다.",
   "category": "workflow",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": "Custom Subagents Repository",
   "tools": [
     "Bash",
@@ -28,7 +28,10 @@
     "git 커밋 메시지 prefix(feat/fix/refactor/docs/test/chore) → 카테고리 태그 자동 매핑",
     "PR/JIRA/이슈 식별자를 사용자 입력·git 로그에서 자동 추출하여 추적성 라인 추가",
     "사용자가 명시한 공수(시간) 및 우선순위(P0/Critical 등) 메타데이터 표기",
-    "frontmatter total_hours·focus_project 선택 필드 지원으로 주간보고 차트 정확도 향상"
+    "frontmatter total_hours·focus_project 선택 필드 지원으로 주간보고 차트 정확도 향상",
+    "전일 보고서의 '내일 할 일' 기반 이월 후보 제안 (사용자 승인 항목만 반영)",
+    "전일 진행률 기준 연속성 확인 (미언급 시 맥락 질문, 진행률 후퇴 시 1회 확인)",
+    "마감(status: confirmed) 보고서 수정 시 경고 및 /일일마감 재확정 안내"
   ],
   "tags": [
     "daily-report",
