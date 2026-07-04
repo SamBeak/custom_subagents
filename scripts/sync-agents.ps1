@@ -20,6 +20,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+# pwsh -File 호출 시 "-Agent a,b"가 단일 문자열로 바인딩되므로 콤마 분리 정규화
+if ($Agent) { $Agent = @($Agent | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ }) }
 if (-not (Test-Path "agents")) {
     Write-Host "오류: 리포 루트에서 실행하세요 ('agents' 디렉토리 없음)"
     exit 1
