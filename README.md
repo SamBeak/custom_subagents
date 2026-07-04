@@ -128,6 +128,17 @@ Task({
 })
 ```
 
+### 배포 동기화 (sync-agents.ps1)
+
+리포는 정본이고 실제 실행은 `~/.claude/agents/`의 배포본을 사용한다. 두 위치의 드리프트를 감지·해소하려면:
+
+```powershell
+pwsh scripts/sync-agents.ps1          # 드리프트 리포트 (무변경, 종료코드 1=드리프트 존재)
+pwsh scripts/sync-agents.ps1 -Apply   # 이미 배포된 항목 갱신 (-All: 신규 설치 포함)
+```
+
+에이전트 번들 스크립트는 `~/.claude/agent-scripts/<agent>/`로, `commands/*.md`는 `~/.claude/commands/`로 함께 배포된다. 리포에 대응 파일이 없는 배포 파일은 건드리지 않는다.
+
 ## Development Guidelines
 
 ### Agent Configuration (`agent.json`)
