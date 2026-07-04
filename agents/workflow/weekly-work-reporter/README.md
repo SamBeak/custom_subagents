@@ -16,6 +16,12 @@ Obsidian에 기록된 일일업무보고(월~금, 평일만)를 자동으로 읽
 - `일일업무보고/` 디렉토리에 `YYYY-MM-DD.md` 형식의 일일보고서가 존재
 - Python 3 설치 (날짜 계산용)
 
+### 결정적 집계 스크립트 (v1.4.0)
+
+주간 수치(병합·공수·유형·일자별·완료 현황)와 차트 4종은 번들 스크립트 `scripts/aggregate_weekly.py`(Python 3.9+, 표준 라이브러리만 사용)가 결정적으로 산출합니다. `scripts/sync-agents.ps1 -Apply` 실행 시 `~/.claude/agent-scripts/weekly-work-reporter/`로 함께 배포됩니다. Python이 없거나 스크립트 실행에 실패하면 기존 인라인 휴리스틱으로 자동 폴백하며, 보고서 캡션에 산정 방식이 표기됩니다.
+
+추가로 전주 주간보고서를 자동 탐색하여 이월 여부를 실측하고 "전주 대비" 통계 라인을 생성하며, 일일보고의 `status: confirmed`(마감) 여부를 주간 통계에 집계합니다.
+
 ## Capabilities
 
 - Obsidian 일일업무보고 파일 자동 탐색 및 일괄 읽기
