@@ -310,7 +310,7 @@ def aggregate(daily_dir, week_start=None, week_end=None, prev_weekly=None,
         fm, items, unparsed = parse_daily(p.read_text(encoding="utf-8"), day_str)
         analyzed_dates.append(day_str)
         unparsed_all.extend(unparsed)
-        status = fm.get("status", "").strip().lower()
+        status = fm.get("status", "").strip().strip('"\'').lower()
         if status == "confirmed":
             confirmed_dates.append(day_str)
         elif status == "draft":

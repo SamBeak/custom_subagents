@@ -179,6 +179,16 @@ def test_chart_blocks_ready_to_paste():
     assert "100%" in r["charts"]["completion_table"]
 
 
+def test_quoted_frontmatter_status_recognized(tmp_path):
+    # frontmatter status가 따옴표로 감싸여도(confirmed) 정상 인식되어야 한다
+    (tmp_path / "2026-06-22.md").write_text(
+        '---\nstatus: "confirmed"\n---\n\n## 오늘 한 일\n\n- **결제 모듈 개발** `30/100%`\n',
+        encoding="utf-8")
+    r = agg.aggregate(str(tmp_path), week_start="2026-06-22", week_end="2026-06-22")
+    assert r["stats"]["confirmed_reports"] == 1
+    assert r["meta"]["confirmed_dates"] == ["2026-06-22"]
+
+
 def test_cli_outputs_valid_json():
     out = subprocess.run(
         [sys.executable, str(Path(agg.__file__)), "--dir", str(DAILY),
