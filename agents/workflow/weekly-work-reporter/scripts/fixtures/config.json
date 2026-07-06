@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "projects": [
+    { "id": "payment", "name": "결제 서비스", "aliases": ["payment_service"], "status": "active" },
+    { "id": "atl-rams", "name": "ATL-RAMS", "aliases": ["ramsa", "RAMS"], "status": "active" },
+    { "id": "pm-automation", "name": "사내 PM 자동화", "aliases": ["custom_subagents", "zero-touch"], "status": "active" }
+  ],
+  "membership": [],
+  "rules": {
+    "per_project": { "pm-automation": { "exclude_keywords": ["실험"] } },
+    "thresholds": { "stall_days": 3, "wip_limit": 8, "promise_window": 3 }
+  }
+}

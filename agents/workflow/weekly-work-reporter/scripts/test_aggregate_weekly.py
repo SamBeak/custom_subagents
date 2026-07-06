@@ -196,3 +196,89 @@ def test_cli_outputs_valid_json():
         capture_output=True, text=True, encoding="utf-8")
     assert out.returncode == 0
     assert json.loads(out.stdout)["stats"]["done"] == 3
+
+
+# ---- config (B안: 프로젝트 레지스트리) ----
+
+CONFIG = FIX / "config.json"
+
+
+def write_daily(tmp_path, date_str, body):
+    (tmp_path / f"{date_str}.md").write_text(
+        f"---\ndate: {date_str}\ntype: 일일업무보고\n---\n\n# 일일업무보고\n\n{body}",
+        encoding="utf-8")
+
+
+def test_config_normalizes_aliases_to_registry_names():
+    r = run(config=str(CONFIG))
+    names = {p["name"] for p in r["projects"]}
+    assert "결제 서비스" in names and "payment_service" not in names
+    assert "사내 PM 자동화" in names and "custom_subagents" not in names
+    assert "ATL-RAMS" in names                      # name 일치는 그대로
+    assert r["meta"]["config_loaded"] is True
+
+
+def test_config_preserves_effort_pcts_after_rename():
+    r = run(config=str(CONFIG))
+    pcts = {p["name"]: p["effort_pct"] for p in r["projects"]}
+    assert pcts == {"결제 서비스": 40, "사내 PM 자동화": 29, "ATL-RAMS": 17, "web_frontend": 14}
+
+
+def test_config_unregistered_kept_and_reported():
+    r = run(config=str(CONFIG))
+    assert r["meta"]["unregistered_projects"] == ["web_frontend"]
+    assert any(p["name"] == "web_frontend" for p in r["projects"])   # 미배정으로 뭉개지 않음
+
+
+def test_config_chart_labels_use_registry_names():
+    r = run(config=str(CONFIG))
+    assert '"결제 서비스" : 40' in r["charts"]["project_pie"]
+
+
+def test_config_absent_behavior_unchanged():
+    r = run()
+    assert r["meta"]["config_loaded"] is False
+    assert any(p["name"] == "payment_service" for p in r["projects"])
+    assert r["meta"]["unregistered_projects"] == []
+
+
+def test_config_invalid_json_ignored(tmp_path):
+    bad = tmp_path / "broken.json"
+    bad.write_text("{not json", encoding="utf-8")
+    r = run(config=str(bad))
+    assert r["meta"]["config_loaded"] is False
+    assert any(p["name"] == "payment_service" for p in r["projects"])
+
+
+def test_config_exclude_keywords_filters_items(tmp_path):
+    write_daily(tmp_path, "2026-06-29", (
+        "## 오늘 한 일\n"
+        "- **[DOC] 프롬프트 실험 기록** `100/100%` `{custom_subagents}`\n"
+        "  - 임시 실험 노트 정리\n"
+        "  - (프롬프트 실험)\n"
+        "- **[DOC] 에이전트 가이드 갱신** `100/100%` `{custom_subagents}`\n"
+        "  - 사용 가이드 문서 갱신\n"
+        "  - (agent guide 갱신)\n"))
+    r = agg.aggregate(str(tmp_path), week_start="2026-06-29", week_end="2026-07-03",
+                      config=str(CONFIG))
+    terms = [m["tech_term"] for m in r["merged"]]
+    assert "agent guide 갱신" in terms and "프롬프트 실험" not in terms
+    assert r["meta"]["excluded_count"] == 1
+
+
+def test_config_alias_merges_split_tags(tmp_path):
+    write_daily(tmp_path, "2026-06-29", (
+        "## 진행 중인 일\n"
+        "- **다국어 지원 개선** `30/100%` `{RAMS}`\n"
+        "  - 리소스 구조 정리\n"
+        "  - (i18n 개선)\n"))
+    write_daily(tmp_path, "2026-06-30", (
+        "## 진행 중인 일\n"
+        "- **다국어 지원 개선** `60/100%` `{ramsa}`\n"
+        "  - 번역 키 정리\n"
+        "  - (i18n 개선)\n"))
+    r = agg.aggregate(str(tmp_path), week_start="2026-06-29", week_end="2026-07-03",
+                      config=str(CONFIG))
+    assert len(r["merged"]) == 1
+    assert r["merged"][0]["project"] == "ATL-RAMS"       # 두 철자가 한 registry name으로
+    assert [p["name"] for p in r["projects"]] == ["ATL-RAMS"]

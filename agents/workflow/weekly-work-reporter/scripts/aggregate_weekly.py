@@ -48,6 +48,41 @@ def normalize_key(text):
     return re.sub(r"[\s\.\,\:\;\-\_\(\)\[\]\{\}·]+", "", text.lower())
 
 
+def load_config(path):
+    """--config JSON 로드. 파일 없음/JSON 오류/projects 배열 부재 → None (config 무시)."""
+    if not path:
+        return None
+    try:
+        with open(path, encoding="utf-8") as f:
+            cfg = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(cfg, dict) or not isinstance(cfg.get("projects"), list):
+        return None
+    return cfg
+
+
+def build_registry_index(config):
+    """정규화 키 → 프로젝트 dict 매핑. id/name/aliases 전부 키로 등록."""
+    index = {}
+    for proj in config["projects"]:
+        keys = [proj.get("id", ""), proj.get("name", "")] + list(proj.get("aliases", []))
+        for k in keys:
+            if k:
+                index[normalize_key(str(k))] = proj
+    return index
+
+
+def resolve_project(raw, registry_index):
+    """원시 프로젝트 문자열 → (표시명, 프로젝트 id, registered). 미등록은 원시값 유지."""
+    if registry_index is None:
+        return raw, None, True
+    proj = registry_index.get(normalize_key(raw))
+    if proj:
+        return proj["name"], proj.get("id"), True
+    return raw, None, False
+
+
 def fold_small_groups(scores):
     """5% 미만 그룹을 '기타'로 통합. 소그룹이 2개 이상일 때만 (1개면 유지)."""
     total = sum(scores.values())
@@ -263,7 +298,7 @@ def parse_prev_weekly(path):
 
 
 def aggregate(daily_dir, week_start=None, week_end=None, prev_weekly=None,
-              include_weekends=False):
+              include_weekends=False, config=None):
     """spec §4.5 스키마의 dict 반환. 구현 요구사항:
     - daily_dir의 YYYY-MM-DD.md 전수 → 날짜 범위·주말 필터
     - frontmatter(date/status/total_hours/focus_project) 정규식 파싱
@@ -277,6 +312,11 @@ def aggregate(daily_dir, week_start=None, week_end=None, prev_weekly=None,
       미지정 시 None; stats.prev_week는 '주간 통계'의 '완료 업무: N건' 파싱 (실패 시 None)
     - charts 4종: mermaid_pie / 표+캡션 문자열 완성본 (테스트의 형식 단언 참조)
     """
+    # ---- config 로드 (선택) ----
+    cfg = load_config(config)
+    registry = build_registry_index(cfg) if cfg else None
+    per_project_rules = (cfg.get("rules") or {}).get("per_project") or {} if cfg else {}
+
     # ---- 파일 수집 + 날짜 범위·주말 필터 ----
     dir_path = Path(daily_dir)
     dated_files = {}
@@ -297,6 +337,7 @@ def aggregate(daily_dir, week_start=None, week_end=None, prev_weekly=None,
 
     # ---- 일자별 파싱 + 병합 ----
     days_out = []
+    day_counted_records = []   # days_out와 병렬: 각 일자에 카운트된 (병합키, 완료여부) 목록
     analyzed_dates = []
     confirmed_dates = []
     draft_dates = []
@@ -321,6 +362,7 @@ def aggregate(daily_dir, week_start=None, week_end=None, prev_weekly=None,
 
         item_count = 0
         completed_count = 0
+        counted_keys = []
         for item in items:
             identifiers, desc_count, tech_term = classify_sub_bullets(item["sub_bullets"])
             # 프로젝트 판정: 인라인 태그 > 프로젝트 H2 > frontmatter > 일반 업무
@@ -350,6 +392,7 @@ def aggregate(daily_dir, week_start=None, week_end=None, prev_weekly=None,
                 completed_count += 1
 
             key = normalize_key(tech_term or item["title"])
+            counted_keys.append((key, item["pct"] == 100))
             entry = merged_index.get(key)
             if entry is None:
                 entry = {
@@ -405,6 +448,7 @@ def aggregate(daily_dir, week_start=None, week_end=None, prev_weekly=None,
             "completed_count": completed_count,
             "status": status,
         })
+        day_counted_records.append(counted_keys)
 
     # ---- 이월(carryover) 판정 ----
     prev_keys = None
@@ -419,6 +463,9 @@ def aggregate(daily_dir, week_start=None, week_end=None, prev_weekly=None,
     proj_wip = {}
     cat_scores = {}
     cat_counts = {}
+    excluded_keys = set()
+    excluded_count = 0
+    unregistered_raw = set()
     for key in merged_order:
         e = merged_index[key]
         internal = {
@@ -432,6 +479,22 @@ def aggregate(daily_dir, week_start=None, week_end=None, prev_weekly=None,
         }
         score = effort_score(internal)
         project = e["explicit_project"] or e["fallback_project"]
+        # ---- registry 정규화: 공수·카테고리·완료율·차트 집계 이전에 표시명으로 교체 ----
+        proj_id = None
+        if project != "일반 업무":
+            project, proj_id, registered = resolve_project(project, registry)
+            if not registered:
+                unregistered_raw.add(project)
+        # ---- 가감: rules.per_project.<id>.exclude_keywords (always_include 우선) ----
+        if proj_id is not None and proj_id in per_project_rules:
+            rule = per_project_rules[proj_id] or {}
+            text = f"{e['title']} {e['tech_term'] or ''}"
+            excluded_by_kw = any(kw in text for kw in (rule.get("exclude_keywords") or []))
+            saved_by_include = any(inc in text for inc in (rule.get("always_include") or []))
+            if excluded_by_kw and not saved_by_include:
+                excluded_keys.add(key)
+                excluded_count += 1
+                continue
         category = e["explicit_tag"] or guess_category(e["title"], e["tech_term"])
         completed = e["end_pct"] == 100
         merged_out.append({
@@ -457,6 +520,13 @@ def aggregate(daily_dir, week_start=None, week_end=None, prev_weekly=None,
         proj_wip[project] = proj_wip.get(project, 0) + (0 if completed else 1)
         cat_scores[category] = cat_scores.get(category, 0.0) + score
         cat_counts[category] = cat_counts.get(category, 0) + 1
+
+    # ---- 제외 항목을 일자별 카운트에서 감산 (merged 제외 키 대조) ----
+    if excluded_keys:
+        for day, records in zip(days_out, day_counted_records):
+            day["item_count"] -= sum(1 for k, _ in records if k in excluded_keys)
+            day["completed_count"] -= sum(
+                1 for k, comp in records if k in excluded_keys and comp)
 
     # ---- projects / categories ----
     proj_pcts = normalize_pcts(proj_scores)
@@ -504,6 +574,9 @@ def aggregate(daily_dir, week_start=None, week_end=None, prev_weekly=None,
         "confirmed_dates": confirmed_dates,
         "draft_dates": draft_dates,
         "unparsed_count": len(unparsed_all),
+        "config_loaded": cfg is not None,
+        "unregistered_projects": sorted(unregistered_raw),
+        "excluded_count": excluded_count,
     }
 
     # ---- stats ----
@@ -589,10 +662,11 @@ def main():
     parser.add_argument("--week-end")
     parser.add_argument("--prev-weekly")
     parser.add_argument("--include-weekends", action="store_true")
+    parser.add_argument("--config")
     parser.add_argument("--out")
     args = parser.parse_args()
     result = aggregate(args.dir, args.week_start, args.week_end,
-                       args.prev_weekly, args.include_weekends)
+                       args.prev_weekly, args.include_weekends, args.config)
     text = json.dumps(result, ensure_ascii=False, indent=2)
     if args.out:
         Path(args.out).write_text(text, encoding="utf-8")
