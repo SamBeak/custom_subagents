@@ -28,6 +28,10 @@
 | **리스크 경과일** | 블로커가 며칠째 열려 있는가 (에이징) |
 | **정체 일수** | 같은 업무의 진행률이 며칠째 멈췄는가 |
 
+### 프로젝트 레지스트리 연동 (v1.1.0)
+
+vault `_config/work-agents.yaml`이 있으면 정체임계일·WIP임계·약속판정 기준을 config에서 읽고(보드 frontmatter보다 우선), 포트폴리오 보드를 레지스트리 id 기준으로 집계해 프로젝트 철자 변형이 한 행으로 합쳐집니다. 레지스트리의 마일스톤·마감일이 추론보다 우선합니다. config가 없으면 기존 동작 그대로입니다. 스키마는 `agents/_shared/config-contract.md` 참조.
+
 ## Capabilities
 
 - 이전 PM 보드 + 일일/주간보고의 시간축 교차 분석
@@ -190,6 +194,12 @@ tags: [pm-board, management]
 4. **리스크 관리**: 블로커가 방치되지 않도록 경과일로 압박
 
 ## Version History
+
+- **v1.1.0** - 프로젝트 레지스트리 연동 (Phase 0)
+  - vault `_config/work-agents.yaml`의 `rules.thresholds`(정체임계일·WIP임계·약속판정)를 보드 frontmatter보다 우선 적용
+  - 포트폴리오를 레지스트리 id 기준으로 집계·표시명(name) 표기 — 프로젝트 철자 변형 통합
+  - 레지스트리 `projects[].milestones/deadline`을 마일스톤 추론보다 우선 사용
+  - config 부재 시 기존 동작 그대로 유지 (후위호환)
 
 - **v1.0.0** - 초기 릴리즈
   - 살아있는 PM 보드 방식(시간축 누적 추적)

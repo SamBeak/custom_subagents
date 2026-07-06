@@ -3,7 +3,7 @@
   "type": "agent",
   "description": "일일/주간업무보고와 이전 PM 보드를 시간축으로 교차 분석하여, 지연·정체·리스크·우선순위·포트폴리오를 추적하는 개인 PM 에이전트. 약속 이행률·리스크 경과일·정체 일수를 누적 계산하며 '살아있는 PM 보드'(PM보드/PM-Board.md) 하나를 유지·갱신합니다. PM 점검/PM 보드 갱신 요청 시 사용.",
   "category": "workflow",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Custom Subagents Repository",
   "tools": [
     "Bash",
@@ -27,7 +27,9 @@
     "단일 PM 보드 파일 유지 — 현황 섹션 교체 + 변경 이력 누적",
     "초기/갱신 실행 모드 자동 판별 (이전 보드 존재 여부)",
     "patch_content H1::H2 헤딩 경로로 invalid-target 에러 회피",
-    "원본 보고서 무수정 (읽기 전용)"
+    "원본 보고서 무수정 (읽기 전용)",
+    "vault _config/work-agents.yaml 연동 — thresholds(정체임계일·WIP임계·약속판정) config 우선 적용, 포트폴리오를 레지스트리 id 기준 집계·표시명 표기",
+    "레지스트리 projects[].milestones/deadline을 마일스톤 추론보다 우선 사용"
   ],
   "tags": [
     "pm-board",
