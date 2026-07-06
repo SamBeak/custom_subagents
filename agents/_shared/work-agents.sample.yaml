@@ -1,0 +1,61 @@
+# work-agents.yaml — 업무 에이전트 단일 정본 설정
+# 정본 위치: Obsidian vault `_config/work-agents.yaml` (이 파일은 리포 샘플/원본)
+# 스키마·해석 규칙: agents/_shared/config-contract.md
+version: 1
+
+paths:
+  daily_dir: 일일업무보고
+  weekly_dir: 주간업무보고
+  pm_board: PM보드/PM-Board.md
+  wbs_dir: 프로젝트관리
+
+# ── ① 프로젝트 레지스트리 (id=불변 내부 키, name=표시명, aliases=철자변형 흡수) ──
+projects:
+  - id: atl-axis
+    name: ATL AXIS
+    aliases: [atl_axis, AXIS]
+    status: active
+  - id: atl-home
+    name: ATL 홈페이지
+    aliases: [atl_home]
+    status: active
+  - id: atl-rams
+    name: ATL-RAMS
+    aliases: [atl-rams, ramsa, RAMS, ATL-RAMS ALE]
+    status: active
+  - id: lean-buff
+    name: Lean Buff
+    aliases: [lean_buff]
+    status: active
+  - id: printage
+    name: Printage
+    aliases: [printage]
+    status: active
+  - id: pm-automation
+    name: 사내 PM 자동화
+    aliases: [custom_subagents, zero-touch]
+    status: active
+
+# ── ② 멤버십 규칙 (위→아래 우선순위 매칭; 실패 → 미배정) ──
+membership:
+  - { match: { jira_prefix: "AXIS-" }, project: atl-axis }
+  - { match: { folder: atl_axis }, project: atl-axis }
+  - { match: { folder: atl_home }, project: atl-home }
+  - { match: { folder: atl-rams }, project: atl-rams }
+  - { match: { folder: ramsa }, project: atl-rams }
+  - { match: { folder: lean_buff }, project: lean-buff }
+  - { match: { folder: printage }, project: printage }
+  - { match: { folder: custom_subagents }, project: pm-automation }
+  - { match: { folder: zero-touch }, project: pm-automation }
+
+# ── ③ 수집 가감 규칙 ──
+rules:
+  global:
+    exclude_commit_prefixes: [chore, build, ci]
+    git: { since: midnight, max_count: 50 }
+  per_project: {}
+  thresholds: { stall_days: 3, wip_limit: 8, promise_window: 3 }
+
+vocab:
+  glossary_extra: []
+  commit_prefix_map: {}
