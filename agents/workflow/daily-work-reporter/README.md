@@ -34,6 +34,10 @@
 - **진행률 연속성**: 어제 "진행 중"이던 업무는 어제 진행률을 기준으로 질문하며, 진행률이 후퇴하면 한 번 확인합니다.
 - **마감 보호**: `/일일마감`으로 확정(`status: confirmed`)된 보고서는 명시적 승인 없이 수정하지 않으며, 수정 후 재확정을 안내합니다.
 
+### 프로젝트 레지스트리 연동 (v1.4.0)
+
+vault `_config/work-agents.yaml`에 프로젝트 레지스트리를 정의하면, 폴더명 대신 프로젝트 **표시명**이 태그로 부착됩니다(예: `{custom_subagents}` → `{사내 PM 자동화}`). 레지스트리에 없는 폴더는 `{미배정}`으로 표시되어 나중에 aliases 한 줄 추가로 흡수할 수 있습니다. config가 없으면 기존 폴더명 태그 동작이 그대로 유지됩니다. 스키마·해석 규칙은 `agents/_shared/config-contract.md` 참조.
+
 ## Tools Available
 
 | Tool | Purpose |
@@ -162,6 +166,12 @@ tags: [daily-report, work-log]
 4. **개인 업무 로그**: Obsidian에 체계적으로 업무 기록을 축적
 
 ## Version History
+
+- **v1.4.0** - 프로젝트 레지스트리 연동 (Phase 0)
+  - vault `_config/work-agents.yaml` 로드 → 폴더명을 프로젝트 표시명(`{name}`)으로 해석해 태그 부착
+  - 해석 실패 시 `{미배정}` 부착 (임의 프로젝트명 생성 금지), config 부재 시 기존 `{폴더명}` 동작 유지 (후위호환)
+  - config 수집 가감: 커밋 prefix 제외·git 파라미터(since/max_count)·용어 사전 확장·커밋 카테고리 매핑 오버라이드
+  - 스키마·해석 규칙 정본: `agents/_shared/config-contract.md`
 
 - **v1.3.0** - 전일 보고서 연속성·마감 보호
   - 전일 보고서 참조(Phase 1.5): "내일 할 일" 이월 후보 제안 — 사용자 승인 항목만 반영
