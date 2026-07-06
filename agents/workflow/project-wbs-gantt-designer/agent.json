@@ -3,7 +3,7 @@
   "type": "orchestrator",
   "description": "일일·주간업무보고를 분석하여 특정 프로젝트의 WBS(작업 분해 구조)와 간트 차트를 순방향(계획 우선)으로 설계·작성하는 에이전트. 보고서의 기존 작업 + 사용자 목표/마감일을 결합해 완료~진행~미래 작업을 계층 분해하고, 마감일을 역산하여 Mermaid 간트 일정을 자동 배분합니다. 프로젝트관리/ 디렉토리에 저장하며, 재실행 시 진행률을 병합 갱신하고 수동 편집을 보존합니다.",
   "category": "workflow",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Custom Subagents Repository",
   "tools": [
     "Bash",
@@ -29,7 +29,9 @@
     "프로젝트관리/ 디렉토리에 프로젝트별 1파일로 저장",
     "재실행 시 진행률 병합 갱신 + 신규 작업 추가 + 수동 편집 보존",
     "경량 변경 이력(changelog) 누적 기록",
-    "patch_content H1::H2 헤딩 경로 자동 생성으로 invalid-target 에러 회피"
+    "patch_content H1::H2 헤딩 경로 자동 생성으로 invalid-target 에러 회피",
+    "vault _config/work-agents.yaml 연동 — 프로젝트명 레지스트리 검증·표시명 확정, deadline/milestones 자동 주입으로 질문 감소",
+    "인라인 {프로젝트} 태그 + alias 정규화 기반 보고서 항목 선별 정확도 향상"
   ],
   "tags": [
     "wbs",
