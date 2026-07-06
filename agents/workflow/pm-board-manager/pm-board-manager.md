@@ -49,6 +49,7 @@
 
 0-2. **설정 파싱 및 적용**
    - `paths.pm_board`가 있으면 보드 파일 경로로 사용 (없으면 기존 `PM보드/PM-Board.md`)
+   - **paths 오버라이드는 본문 전체에 적용**: 이후 모든 단계에 하드코딩된 해당 디렉토리/파일 경로 문자열은 기본값 표기일 뿐이며, `paths`에 값이 있으면 읽기·쓰기·탐색 모두 그 값으로 대체해 사용
    - **thresholds 우선순위**: `rules.thresholds`의 `stall_days`(정체임계일)·`wip_limit`(WIP임계)·`promise_window`(약속 미이행 판정 영업일)를 **보드 frontmatter `config` 값보다 우선** 적용 (둘 다 없으면 기존 기본값 3/8/3)
    - **마일스톤·마감**: 레지스트리 `projects[].milestones`/`deadline`이 있으면 보드 frontmatter `milestones`·추론보다 **우선** 사용
 
