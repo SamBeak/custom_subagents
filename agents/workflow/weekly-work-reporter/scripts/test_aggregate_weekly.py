@@ -282,3 +282,64 @@ def test_config_alias_merges_split_tags(tmp_path):
     assert len(r["merged"]) == 1
     assert r["merged"][0]["project"] == "ATL-RAMS"       # 두 철자가 한 registry name으로
     assert [p["name"] for p in r["projects"]] == ["ATL-RAMS"]
+
+
+def test_unassigned_tag_not_reported_unregistered(tmp_path):
+    # daily의 해석 실패 마커 {미배정}: 그룹으로는 유지, 미등록 보고 대상에서는 제외
+    write_daily(tmp_path, "2026-06-29", (
+        "## 오늘 한 일\n"
+        "- **소속 미상 폴더 정리** `100/100%` `{미배정}`\n"
+        "  - 레거시 폴더 파일 이동\n"))
+    r = agg.aggregate(str(tmp_path), week_start="2026-06-29", week_end="2026-07-03",
+                      config=str(CONFIG))
+    assert "미배정" in {p["name"] for p in r["projects"]}
+    assert "미배정" not in r["meta"]["unregistered_projects"]
+
+
+def test_malformed_registry_entries_hardened(tmp_path):
+    # 수기 편집 config: dict 아닌 항목은 스킵, 문자열 aliases는 통째 1개 alias로,
+    # name 없는 항목은 id로 표시명 폴백 — 그리고 절대 문자 단위로 분해되지 않는다
+    cfg = tmp_path / "config.json"
+    cfg.write_text(json.dumps({
+        "version": 1,
+        "projects": [
+            "garbage",
+            {"id": "x-proj", "aliases": "x_alias"},
+        ],
+    }, ensure_ascii=False), encoding="utf-8")
+    write_daily(tmp_path, "2026-06-29", (
+        "## 오늘 한 일\n"
+        "- **별칭 문자열 항목** `100/100%` `{x_alias}`\n"
+        "- **단문자 태그 항목** `100/100%` `{x}`\n"))
+    r = agg.aggregate(str(tmp_path), week_start="2026-06-29", week_end="2026-07-03",
+                      config=str(cfg))                    # 크래시 없이 완료되어야 한다
+    names = {p["name"] for p in r["projects"]}
+    assert "x-proj" in names                              # x_alias → 표시명 id 폴백
+    assert "x" in names                                   # 문자 조각 키에 오염되지 않고 원시 유지
+    assert "x" in r["meta"]["unregistered_projects"]
+    assert "x-proj" not in r["meta"]["unregistered_projects"]
+
+
+def test_always_include_overrides_exclusion(tmp_path):
+    # 계약: always_include는 제외 규칙보다 우선 (절대 제외 금지),
+    # 매칭 = 제목·기술용어에 always_include 항목 문자열 포함
+    cfg = tmp_path / "config.json"
+    cfg.write_text(json.dumps({
+        "version": 1,
+        "projects": [
+            {"id": "pm-automation", "name": "사내 PM 자동화",
+             "aliases": ["custom_subagents"], "status": "active"},
+        ],
+        "rules": {"per_project": {"pm-automation": {
+            "exclude_keywords": ["실험"],
+            "always_include": ["실험 기록"],
+        }}},
+    }, ensure_ascii=False), encoding="utf-8")
+    write_daily(tmp_path, "2026-06-29", (
+        "## 오늘 한 일\n"
+        "- **프롬프트 실험 기록** `100/100%` `{custom_subagents}`\n"
+        "  - 실험 노트 정리\n"))
+    r = agg.aggregate(str(tmp_path), week_start="2026-06-29", week_end="2026-07-03",
+                      config=str(cfg))
+    assert r["meta"]["excluded_count"] == 0
+    assert any(m["title"] == "프롬프트 실험 기록" for m in r["merged"])

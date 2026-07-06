@@ -63,10 +63,23 @@ def load_config(path):
 
 
 def build_registry_index(config):
-    """정규화 키 → 프로젝트 dict 매핑. id/name/aliases 전부 키로 등록."""
+    """정규화 키 → 프로젝트 dict 매핑. id/name/aliases 전부 키로 등록.
+
+    수기 편집 config 강건성: dict가 아닌 항목·name/id 둘 다 없는 항목은 건너뛰고,
+    문자열 aliases는 단일 원소 리스트로 보정한다 (문자 단위 분해 금지).
+    """
     index = {}
     for proj in config["projects"]:
-        keys = [proj.get("id", ""), proj.get("name", "")] + list(proj.get("aliases", []))
+        if not isinstance(proj, dict):
+            continue
+        if not (proj.get("name") or proj.get("id")):
+            continue
+        aliases = proj.get("aliases", [])
+        if isinstance(aliases, str):
+            aliases = [aliases]
+        elif not isinstance(aliases, list):
+            aliases = []
+        keys = [proj.get("id", ""), proj.get("name", "")] + aliases
         for k in keys:
             if k:
                 index[normalize_key(str(k))] = proj
@@ -74,12 +87,15 @@ def build_registry_index(config):
 
 
 def resolve_project(raw, registry_index):
-    """원시 프로젝트 문자열 → (표시명, 프로젝트 id, registered). 미등록은 원시값 유지."""
+    """원시 프로젝트 문자열 → (표시명, 프로젝트 id, registered). 미등록은 원시값 유지.
+
+    표시명은 name 우선, 없으면 id로 폴백 (build_registry_index가 둘 다 없는 항목은 배제).
+    """
     if registry_index is None:
         return raw, None, True
     proj = registry_index.get(normalize_key(raw))
     if proj:
-        return proj["name"], proj.get("id"), True
+        return proj.get("name") or proj.get("id"), proj.get("id"), True
     return raw, None, False
 
 
@@ -480,8 +496,10 @@ def aggregate(daily_dir, week_start=None, week_end=None, prev_weekly=None,
         score = effort_score(internal)
         project = e["explicit_project"] or e["fallback_project"]
         # ---- registry 정규화: 공수·카테고리·완료율·차트 집계 이전에 표시명으로 교체 ----
+        # `미배정`은 daily의 해석 실패 마커(프로젝트명 아님) — 일반 업무처럼 resolve를
+        # 건너뛰고, 미등록(unregistered)으로도 절대 보고하지 않는다 (그룹으로는 유지).
         proj_id = None
-        if project != "일반 업무":
+        if project not in ("일반 업무", "미배정"):
             project, proj_id, registered = resolve_project(project, registry)
             if not registered:
                 unregistered_raw.add(project)
