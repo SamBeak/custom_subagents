@@ -27,6 +27,25 @@
 
 ## Working Process
 
+### Phase 0: 설정 로드 & 프로젝트 해석 (공통, 선택적)
+
+0-1. **설정 정본 로드**
+   - `mcp__obsidian__obsidian_get_file_contents`로 `_config/work-agents.yaml` 읽기 시도
+   - 실패(404/연결 오류/YAML 파싱 불가) 시: **이 Phase 전체를 조용히 생략**하고 기존 동작 유지 (후위호환)
+
+0-2. **설정 파싱**
+   - `paths`/`projects`(레지스트리)/`rules`/`vocab` 추출
+   - `paths.daily_dir`/`paths.weekly_dir`가 있으면 각각 일일/주간 디렉토리 경로로 사용
+
+0-3. **프로젝트 해석 규칙 (그룹핑 0단계)**
+   - 모든 프로젝트 판정의 **최상단**에 registry 정규화 적용: 원시 태그/헤더/키워드를 정규화(소문자·공백·구두점 무시)하여 레지스트리 id/name/aliases와 대조 → 일치 시 **표시명(name)**으로 통일 (차트 라벨 파편화 종결)
+   - 레지스트리에 없는 태그는 **원시 철자 그대로 유지**(미등록) — 보고서 하단 보강 제안에서 "미등록 프로젝트 태그: X, Y — aliases 추가로 흡수 가능" 안내
+   - 상세 알고리즘 정본: `agents/_shared/config-contract.md` (수정 시 4개 에이전트 lockstep)
+
+0-4. **스크립트 핸드오프 준비**
+   - 5-0 결정적 집계 실행 시: 읽은 YAML을 구조 그대로 canonical JSON으로 직렬화해 임시 디렉토리에 `work-agents.json`으로 저장 → `--config` 인자로 전달
+   - 스크립트가 정규화·가감(exclude_keywords/always_include)을 수치 레벨에서 적용하므로, 스크립트 성공 시 **정규화 결과도 스크립트 출력이 정본**
+
 ### Phase 1: 대상 주 결정 및 파일 탐색
 
 1. **주차 결정**
@@ -82,12 +101,13 @@
    - 스크립트 경로 해석 (순서대로 최초 존재 경로 사용):
      1. `~/.claude/agent-scripts/weekly-work-reporter/aggregate_weekly.py` (sync 배포본)
      2. 리포 체크아웃 내 `agents/workflow/weekly-work-reporter/scripts/aggregate_weekly.py`
-   - 실행: `python aggregate_weekly.py --dir <임시디렉토리> --week-start <월요일> --week-end <금요일> [--prev-weekly <전주보고서 임시파일>]` (`python` 실패 시 `python3` 재시도)
+   - 실행: `python aggregate_weekly.py --dir <임시디렉토리> --week-start <월요일> --week-end <금요일> [--prev-weekly <전주보고서 임시파일>] [--config <work-agents.json>]` (`python` 실패 시 `python3` 재시도; `--config`는 Phase 0 성공 시에만 부여)
    - **성공 시** (유효한 JSON 반환): 이후 5~7-4단계의 수치·병합·차트는 스크립트 출력을 정본으로 사용
      * `merged`/`projects`/`categories`/`days`/`stats` → 각 섹션·통계의 수치
      * `charts` 4종 블록(project_pie/category_pie/daily_trend_table/completion_table)은 **그대로 삽입** (재계산·수정 금지)
      * 의미상 유사하나 철자가 다른 항목의 추가 병합은 서술에서만 보정하고 수치는 스크립트 값 유지
      * 보고서의 공수 캡션에 "스크립트 집계" 명시
+     * `meta.unregistered_projects`가 비어있지 않으면 보강 제안 단계에서 사용자에게 미등록 태그 목록과 aliases 추가 방법 안내
    - **실패 시** (python 부재·비정상 종료·JSON 파싱 실패): 아래 5~7-4의 인라인 휴리스틱으로 폴백, 캡션에 "휴리스틱 집계" 명시
 
 5. **일일보고서 파싱**
@@ -104,6 +124,7 @@
 
 6. **프로젝트별 그룹핑** (핵심 로직)
    - **그룹핑 우선순위**:
+     0. **(Phase 0 성공 시) registry 정규화**: 아래 1~5로 얻은 원시 프로젝트명을 레지스트리 id/name/aliases와 정규화 대조 → 일치 시 표시명(name)으로 치환 (alias 흡수). 미일치 시 원시명 유지(미등록)
      1. **항목 인라인 `{프로젝트}` 태그가 있으면 → 해당 폴더명을 프로젝트로 직접 사용** (항목 단위 최우선, daily-work-reporter v1.2.0+ 자동 부착)
      2. 프로젝트 기반 H2 헤더가 있으면 → 해당 프로젝트명 사용
      3. frontmatter에 `project` 필드가 있으면 → 해당 프로젝트명 사용
@@ -521,6 +542,7 @@ pie showData title 업무 유형별 비중 (YYYY-WNN)
 ### 카테고리 기반 보고서 처리
 
 일일보고서가 "오늘 한 일/진행 중인 일" 구조만 사용하면, 다음 순서로 프로젝트를 추론합니다:
+0. **(config 로드 성공 시) registry 정규화** — 아래 모든 단계의 결과를 레지스트리 aliases로 흡수해 표시명으로 통일 (`agents/_shared/config-contract.md` 참조)
 1. **항목 인라인 `{프로젝트}` 태그 확인** (진행률 바 뒤 backtick, daily-work-reporter v1.2.0+ 자동 부착) — 가장 구체적, 최우선
 2. frontmatter의 `project` 필드 확인
 3. 항목의 괄호 원문에서 프로젝트 키워드 추출
@@ -790,12 +812,13 @@ Mermaid 미사용 시 markdown 표에 유니코드 진행률 바를 사용:
 
 에이전트가 호출되면 다음 순서를 따르세요:
 
+0. `_config/work-agents.yaml` 로드 시도 (Phase 0) — 성공 시 registry 정규화 활성 + YAML을 JSON으로 직렬화해 6단계 스크립트에 `--config`로 전달, 실패 시 조용히 생략
 1. 사용자 입력에서 대상 주차 파악 (미지정시 이번 주 자동 계산)
 2. Bash로 Python 원라이너 실행하여 월~금 날짜 목록 및 ISO 주차 계산
 3. Obsidian에서 `일일업무보고/` 디렉토리 파일 목록 조회
 4. 대상 주의 평일(월~금) 파일만 필터링하여 읽기
 5. 전주 주간보고서 확인 (`YYYY-WNN.md` → `{월}~{금}.md` 순서 시도, 없으면 생략)
-6. **결정적 집계 실행 (5-0)**: 일일보고 원문을 임시 디렉토리에 저장 → `aggregate_weekly.py` 실행 (배포 경로 → 리포 경로 순, 전주 보고서 확보 시 `--prev-weekly` 전달)
+6. **결정적 집계 실행 (5-0)**: 일일보고 원문을 임시 디렉토리에 저장 → `aggregate_weekly.py` 실행 (배포 경로 → 리포 경로 순, 전주 보고서 확보 시 `--prev-weekly`, Phase 0 성공 시 `--config` 전달)
    - 성공: 병합·공수·유형·일자별·완료 현황·이월·전주 대비 수치와 차트 4종 = 스크립트 출력 정본
    - 실패: 7-1~7-4 인라인 휴리스틱 폴백 (캡션에 산정 방식 명시)
 7. 프로젝트별 그룹핑·중복 병합·진행률 추적 검토 (스크립트 성공 시 결과 검증·서술만, 실패 시 직접 수행)

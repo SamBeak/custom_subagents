@@ -22,6 +22,10 @@ Obsidian에 기록된 일일업무보고(월~금, 평일만)를 자동으로 읽
 
 추가로 전주 주간보고서를 자동 탐색하여 이월 여부를 실측하고 "전주 대비" 통계 라인을 생성하며, 일일보고의 `status: confirmed`(마감) 여부를 주간 통계에 집계합니다.
 
+### 프로젝트 레지스트리 연동 (v1.5.0)
+
+vault `_config/work-agents.yaml`의 프로젝트 레지스트리(id/name/aliases)를 로드해 일일보고의 다양한 프로젝트 철자(`{RAMS}`, `{ramsa}`, `{ATL-RAMS ALE}` 등)를 하나의 표시명으로 정규화합니다. 정규화·가감은 집계 스크립트(`--config`)가 수치 레벨에서 수행하므로 차트와 통계가 일관됩니다. 레지스트리에 없는 태그는 원시 철자를 유지하고 보강 제안에서 안내합니다. config가 없으면 기존 동작이 그대로 유지됩니다.
+
 ## Capabilities
 
 - Obsidian 일일업무보고 파일 자동 탐색 및 일괄 읽기
@@ -177,6 +181,12 @@ daily_reports: [2026-04-07, 2026-04-09, 2026-04-10, 2026-04-11]
 4. **개인 업무 회고**: 주간 단위로 업무 성과를 체계적으로 축적
 
 ## Version History
+
+- **v1.5.0** - 프로젝트 레지스트리 연동 (Phase 0)
+  - vault `_config/work-agents.yaml` 레지스트리(id/name/aliases) 로드 — alias 흡수로 프로젝트 라벨 파편화 종결, 차트 라벨=표시명
+  - YAML→JSON 핸드오프로 집계 스크립트에 `--config` 전달 — 정규화·가감(exclude_keywords/always_include)의 수치 레벨 적용
+  - 미등록 프로젝트 태그 감지 및 보강 제안 안내 (`meta.unregistered_projects`)
+  - config 부재 시 기존 동작 그대로 유지 (후위호환)
 
 - **v1.4.0** - 결정적 집계 스크립트 + 전주 대비 통계
   - 결정적 집계: 번들 스크립트 `aggregate_weekly.py`가 병합·공수·차트 수치 산출(실패 시 인라인 휴리스틱 폴백)

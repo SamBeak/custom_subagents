@@ -3,7 +3,7 @@
   "type": "orchestrator",
   "description": "일일업무보고(월~금)를 분석하여 Top 1% 품질의 주간업무보고를 생성하는 에이전트. 프로젝트별 업무 그룹핑, Executive Summary, 진행률 추적, 다음 주 계획을 포함한 경영진 보고 수준의 주간 리포트를 Obsidian에 저장합니다.",
   "category": "workflow",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "author": "Custom Subagents Repository",
   "tools": [
     "Bash",
@@ -35,7 +35,10 @@
     "번들 스크립트(aggregate_weekly.py) 기반 결정적 집계 — 병합·공수·차트 수치의 재현성 보장 (실패 시 인라인 휴리스틱 자동 폴백)",
     "전주 주간보고서 자동 탐색 (YYYY-WNN·날짜범위 이중 파일명 규약) 기반 이월 실측 판정",
     "전주 대비(WoW) 완료 건수 비교 라인 생성 (전주 보고서 확보 시에만)",
-    "일일보고 frontmatter status 기반 확정(마감) 보고서 카운트 표기"
+    "일일보고 frontmatter status 기반 확정(마감) 보고서 카운트 표기",
+    "vault _config/work-agents.yaml 레지스트리 연동 — alias 흡수로 프로젝트 라벨 파편화 종결, 차트 라벨=표시명 (config 부재 시 기존 동작)",
+    "config 가감 규칙(per_project exclude_keywords/always_include)의 수치 레벨 적용 (aggregate_weekly.py --config)",
+    "미등록 프로젝트 태그 감지 및 레지스트리 보강 안내 (meta.unregistered_projects)"
   ],
   "tags": [
     "weekly-report",
